@@ -8,52 +8,57 @@
 </head>
 <body>
     <h1>LIFE SIMULATOR</h1>
-    <canvas id="life" width="500" height="500"></canvas>
-    <div class="settingsPannel">
-        <div class="yellowSettings">
-            <p class="titleSettings" >Yellow Particles</p>
-            <div class="slidecontainer">
-                <p class="titleSlider">Number of particles</p>
-                <input type="range" min="1" max="300" class="slider" id="yellowPatricles" />
+    <div class="interfaceContainer">
+      
+        <div class="settingsPannel">
+            <div class="yellowSettings">
+                <p class="titleSettings" >Yellow Particles</p>
+                <div class="slidecontainer">
+                    <input type="text" id="YparticlesValue" class="sliderValues" value="">
+                    <input type="range" min="1" max="300" class="slider" id="Yparticles" />
+                    <p class="titleSlider">Number of particles</p>
+                </div>
+                <div class="slidecontainer">
+                    <p class="titleSlider">Zoom</p>
+                    <input type="range" min="0" max="50" class="slider" id="zoomSlider" />
+                </div>
+                <div class="slidecontainer">
+                    <p class="titleSlider">Curve</p>
+                    <input type="range" min="0" max="200" class="slider" id="curveSlider" />
+                </div>
+                
+                <div class="slidecontainer">
+                    <p class="titleSlider">Particles</p>
+                    <input type="range" min="0" max="2000" class="slider" id="ddd" />
+                </div>
+                
             </div>
-            <div class="slidecontainer">
-                <p class="titleSlider">Zoom</p>
-                <input type="range" min="0" max="50" class="slider" id="zoomSlider" />
+            <div class="redSettings">
+                <p class="titleSettings">Red Particles</p>
+                <div class="slidecontainer">
+                    <input type="text" id="RparticlesValue" class="sliderValues" value="">
+                    <input type="range" min="1" max="300" class="slider" id="Rparticles" />
+                    <p class="titleSlider">Number of particles</p>
+                    
+                </div>
+                <div class="slidecontainer">
+                    <p class="titleSlider">Zoom</p>
+                    <input type="range" min="0" max="50" class="slider" id="zoomSlider" />
+                </div>
+                <div class="slidecontainer">
+                    <p class="titleSlider">Curve</p>
+                    <input type="range" min="0" max="200" class="slider" id="curveSlider" />
+                </div>
+                
+                <div class="slidecontainer">
+                    <p class="titleSlider">Particles</p>
+                    <input type="range" min="0" max="2000" class="slider" />
+                </div>
             </div>
-            <div class="slidecontainer">
-                <p class="titleSlider">Curve</p>
-                <input type="range" min="0" max="200" class="slider" id="curveSlider" />
-            </div>
-            
-            <div class="slidecontainer">
-                <p class="titleSlider">Particles</p>
-                <input type="range" min="0" max="2000" class="slider" id="ddd" />
-            </div>
-            
         </div>
-        <div class="redSettings">
-            <p class="titleSettings">Red Particles</p>
-            <div class="slidecontainer">
-                <p class="titleSlider">Number of particles</p>
-                <input type="range" min="1" max="300" class="slider" id="redPatricles" />
-            </div>
-            <div class="slidecontainer">
-                <p class="titleSlider">Zoom</p>
-                <input type="range" min="0" max="50" class="slider" id="zoomSlider" />
-            </div>
-            <div class="slidecontainer">
-                <p class="titleSlider">Curve</p>
-                <input type="range" min="0" max="200" class="slider" id="curveSlider" />
-            </div>
-            
-            <div class="slidecontainer">
-                <p class="titleSlider">Particles</p>
-                <input type="range" min="0" max="2000" class="slider" id="ddd" />
-            </div>
-        </div>
-     
-     
+        <canvas id="life" width="500" height="500"></canvas>
     </div>
+  
     <script  src="/index.js"></script> 
 </body>
 </html>

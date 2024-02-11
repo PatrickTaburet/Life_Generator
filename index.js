@@ -49,8 +49,11 @@ function rule (particles1, particles2, g){
         if ((a.y <= 0) || (a.y >= 500)){a.vy *= -1 };
     }
 }
-yellow = create(superSlider("yellowPatricles","yellowPatricles", 100), "yellow");
-red = create(superSlider("redPatricles","redPatricles", 100),"red");
+
+let Yparticles = superSlider("Yparticles","Yparticles", 100, 'YparticlesValue');
+let Rparticles = superSlider("Rparticles","Rparticles", 100, 'RparticlesValue')
+let yellow = create(Yparticles, "yellow");
+let red = create(Rparticles,"red");
 // green = create(200, "green");
 
 
@@ -78,17 +81,34 @@ update();
 
 // range slider : to controll settings with a slider (curve, zoom, number of perticles)
 
-function superSlider(idSlider, idItem, sourceNumber){
+
+function superSlider(idSlider, idItem, sourceNumber, screen ){
     let slider = document.getElementById(idSlider);
+    let sliderScreen = document.getElementById(screen)
     slider.value = (localStorage.getItem(idItem)) ?  localStorage.getItem(idItem) : sourceNumber;
-    let previousValue = (localStorage.getItem(idItem)) ?  localStorage.getItem(idItem) : slider.value;
+    sliderScreen.value =  (localStorage.getItem(idItem)) ?  localStorage.getItem(idItem) : sourceNumber;;
+
+   
+    let currentValue =  slider.value;
     slider.addEventListener("mouseup",  e => {
-        let currentValue = slider.value;
-        localStorage.setItem(idItem, currentValue);
+        let previousValue = slider.value;
+        localStorage.setItem(idItem, previousValue);
+        sliderScreen.value =  localStorage.getItem(idItem);
+        // console.log(previousValue)
         location.reload();
         });
     // console.log(localStorage);
     // console.log(previousValue);
     // console.log(slider.value);
-    return (previousValue);
+    console.log(localStorage.getItem(idItem))
+    return (currentValue);
 }
+
+// to visualize the actual value of the sliders
+
+function updateTextInput(val, screen) {
+    document.getElementById(screen).value=val; 
+}
+updateTextInput(Yparticles, 'YparticlesValue');
+updateTextInput(Rparticles, 'RparticlesValue');
+
