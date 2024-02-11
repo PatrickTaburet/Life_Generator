@@ -1,5 +1,5 @@
 m = document.querySelector("#life").getContext('2d');
-
+// localStorage.clear();
 function draw(x,y,c,s){
     m.fillStyle = c;
     m.fillRect(x, y, s, s);
@@ -35,25 +35,34 @@ function rule (particles1, particles2, g){
             d = Math.sqrt(dx*dx + dy * dy);
 
         // force d'attraction [ F1 = F2 = G*(m1m2/r2)] comme m=1, F=G*1/d2
-            if (d > 0) {
+            if (d > 0 && d < 80) {
                 F = g *1/d;
                 fx += (F*dx);
                 fy += (F*dy);
             }
         }
-        a.vx = (a.vx + fx);
-        a.vy = (a.vy + fy);
+        a.vx = (a.vx + fx)*0.5;
+        a.vy = (a.vy + fy)*0.5;
         a.x += a.vx;
         a.y += a.vy;
+        if ((a.x <= 0) || (a.x >= 500)){a.vx *= -1 };
+        if ((a.y <= 0) || (a.y >= 500)){a.vy *= -1 };
     }
 }
-yellow = create(5, "yellow");
-red = create(5,"red");
+yellow = create(superSlider("yellowPatricles","yellowPatricles", 100), "yellow");
+red = create(superSlider("redPatricles","redPatricles", 100),"red");
+// green = create(200, "green");
 
 
 function update(){
-    rule(yellow, red, -0.2);
-    rule(red, yellow, -0.2);
+    rule(red, red, -0.1);
+    rule(red, yellow, -0.01);
+    rule(yellow, red, 0.01);
+    // rule(green, green, -0.7)
+    // rule(green, red, -0.5)
+    // rule(red, green, -0.1)
+    // rule(yellow, green, 0.1)
+    
     m.clearRect(0,0,500,500);
     draw(0,0,"black", 500);
     
@@ -63,5 +72,23 @@ function update(){
     requestAnimationFrame(update);
 }
 update();
-console.log(yellow.length);
-console.log(particles.length);
+// console.log("--------" + superSlider("particleSlider","particleSlider", 100));
+// console.log(localStorage["particleSlider"]);
+
+
+// range slider : to controll settings with a slider (curve, zoom, number of perticles)
+
+function superSlider(idSlider, idItem, sourceNumber){
+    let slider = document.getElementById(idSlider);
+    slider.value = (localStorage.getItem(idItem)) ?  localStorage.getItem(idItem) : sourceNumber;
+    let previousValue = (localStorage.getItem(idItem)) ?  localStorage.getItem(idItem) : slider.value;
+    slider.addEventListener("mouseup",  e => {
+        let currentValue = slider.value;
+        localStorage.setItem(idItem, currentValue);
+        location.reload();
+        });
+    // console.log(localStorage);
+    // console.log(previousValue);
+    // console.log(slider.value);
+    return (previousValue);
+}
