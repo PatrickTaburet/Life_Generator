@@ -1,6 +1,7 @@
 h1{
     display: flex;
     justify-content: center;
+    margin: 70px;
 }
 
 .interfaceContainer{
@@ -98,7 +99,7 @@ h1{
   margin: 20px;
   
 }
-#resetButton:hover{
+#resetButton:hover, #randButton:hover {
   background-color: #3bff456e;
   cursor: pointer;
 }

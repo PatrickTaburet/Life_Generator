@@ -35,7 +35,7 @@ function rule (particles1, particles2, g){
             d = Math.sqrt(dx*dx + dy * dy);
 
         // force d'attraction [ F1 = F2 = G*(m1m2/r2)] comme m=1, F=G*1/d2
-            if (d > 0 && d < 80) {
+            if (d > 0 && d < distanceInterract) {
                 F = g *1/d;
                 fx += (F*dx);
                 fy += (F*dy);
@@ -66,12 +66,14 @@ let GGInterract = superSlider("GGInterract","GGInterract", 0, 'GGInterractValue'
 let GYInterract = superSlider("GYInterract","GYInterract", 0, 'GYInterractValue');
 let GRInterract = superSlider("GRInterract","GRInterract", 0, 'GRInterractValue');
 
+let distanceInterract = superSlider("distanceInterract","distanceInterract", 80, 'distanceInterractValue');
+
 
 let yellow = create(Yparticles, "yellow");
 let red = create(Rparticles,"red");
 let green = create(Gparticles, "green");
 
-
+console.log(GRInterract)
 
 function update(){
     rule(red, red, RRInterract);
@@ -136,6 +138,8 @@ updateTextInput(GGInterract, 'GGInterractValue');
 updateTextInput(GYInterract, 'GYInterractValue');
 updateTextInput(GRInterract, 'GRInterractValue');
 
+updateTextInput(distanceInterract, 'distanceInterractValue');
+
 // reset & random buttons
 
 
@@ -147,9 +151,9 @@ resetButton.addEventListener("click", e => {
 
 let randButton = document.getElementById("randButton");
 randButton.addEventListener("click", e => {
-    localStorage.setItem("Yparticles", Math.floor(Math.random() * 200));
-    localStorage.setItem("Rparticles", Math.floor(Math.random() * 200));
-    localStorage.setItem("Gparticles", Math.floor(Math.random() * 200));
+    localStorage.setItem("Yparticles", Math.floor(Math.random() * 300));
+    localStorage.setItem("Rparticles", Math.floor(Math.random() * 300));
+    localStorage.setItem("Gparticles", Math.floor(Math.random() * 300));
     localStorage.setItem("RRInterract", (Math.random() * 10)-5);
     localStorage.setItem("RYInterract", (Math.random() * 10)-5);
     localStorage.setItem("RGInterract", (Math.random() * 10)-5);
