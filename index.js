@@ -1,5 +1,5 @@
 m = document.querySelector("#life").getContext('2d');
-// localStorage.clear();
+
 function draw(x,y,c,s){
     m.fillStyle = c;
     m.fillRect(x, y, s, s);
@@ -93,8 +93,6 @@ function update(){
     requestAnimationFrame(update);
 }
 update();
-// console.log("--------" + superSlider("particleSlider","particleSlider", 100));
-// console.log(localStorage["particleSlider"]);
 
 
 // range slider : to controll settings with a slider (curve, zoom, number of perticles)
@@ -140,19 +138,6 @@ updateTextInput(GRInterract, 'GRInterractValue');
 
 // reset & random buttons
 
-// function stateResetButton(){
-//     let resetButton = document.getElementById("resetButton");
-//     let isClicked = localStorage.hasOwnProperty("state") ? (localStorage.getItem("state") === "true") : true;
-//     resetButton.addEventListener("click", e => {
-//         isClicked = !isClicked;
-//         localStorage.setItem("state", isClicked);
-//         location.reload();
-//     })
-   
-//     return isClicked;
-// }
-// console.log(stateResetButton())
-
 
 let resetButton = document.getElementById("resetButton");
 resetButton.addEventListener("click", e => {
@@ -166,30 +151,16 @@ randButton.addEventListener("click", e => {
     localStorage.setItem("Rparticles", Math.floor(Math.random() * 200));
     localStorage.setItem("Gparticles", Math.floor(Math.random() * 200));
     localStorage.setItem("RRInterract", (Math.random() * 10)-5);
-    localStorage.setItem("RYInterract", (Math.random() * 10)-5);;
-    localStorage.setItem("RGInterract", (Math.random() * 10)-5);;
-    localStorage.setItem("YYInterract", (Math.random() * 10)-5);;
-    localStorage.setItem("YRInterract", (Math.random() * 10)-5);;
-    localStorage.setItem("YGInterract", (Math.random() * 10)-5);;
-    localStorage.setItem("GGInterract", (Math.random() * 10)-5);;
-    localStorage.setItem("GYInterract", (Math.random() * 10)-5);;
-    localStorage.setItem("GRInterract", (Math.random() * 10)-5);;
+    localStorage.setItem("RYInterract", (Math.random() * 10)-5);
+    localStorage.setItem("RGInterract", (Math.random() * 10)-5);
+    localStorage.setItem("YYInterract", (Math.random() * 10)-5);
+    localStorage.setItem("YRInterract", (Math.random() * 10)-5);
+    localStorage.setItem("YGInterract", (Math.random() * 10)-5);
+    localStorage.setItem("GGInterract", (Math.random() * 10)-5);
+    localStorage.setItem("GYInterract", (Math.random() * 10)-5);
+    localStorage.setItem("GRInterract", (Math.random() * 10)-5);
     location.reload();
 })
 
-// function randomizeSlider(idSlider, idItem, sourceNumber, screen ){
-//     let slider = document.getElementById(idSlider);
-//     let sliderScreen = document.getElementById(screen)
-//     slider.value = (localStorage.getItem(idItem)) ?  localStorage.getItem(idItem) : sourceNumber;
-//     sliderScreen.value =  (localStorage.getItem(idItem)) ?  localStorage.getItem(idItem) : sourceNumber;;
+// --> add all differents variables paricles in an array to make loop foreach
 
-   
-//     let currentValue =  slider.value;
-//     slider.addEventListener("mouseup",  e => {
-//         let previousValue = slider.value;
-//         localStorage.setItem(idItem, previousValue);
-//         sliderScreen.value =  localStorage.getItem(idItem);
-//         location.reload();
-//         });
-//     return (currentValue);
-// }
