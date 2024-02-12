@@ -51,20 +51,38 @@ function rule (particles1, particles2, g){
 }
 
 let Yparticles = superSlider("Yparticles","Yparticles", 100, 'YparticlesValue');
-let Rparticles = superSlider("Rparticles","Rparticles", 100, 'RparticlesValue')
+let Rparticles = superSlider("Rparticles","Rparticles", 100, 'RparticlesValue');
+let Gparticles = superSlider("Gparticles","Gparticles", 100, 'GparticlesValue');
+
+let RRInterract = superSlider("RRInterract","RRInterract", 0, 'RRInterractValue');
+let RYInterract = superSlider("RYInterract","RYInterract", 0, 'RYInterractValue');
+let RGInterract = superSlider("RGInterract","RGInterract", 0, 'RGInterractValue');
+
+let YYInterract = superSlider("YYInterract","YYInterract", 0, 'YYInterractValue');
+let YRInterract = superSlider("YRInterract","YRInterract", 0, 'YRInterractValue');
+let YGInterract = superSlider("YGInterract","YGInterract", 0, 'YGInterractValue');
+
+let GGInterract = superSlider("GGInterract","GGInterract", 0, 'GGInterractValue');
+let GYInterract = superSlider("GYInterract","GYInterract", 0, 'GYInterractValue');
+let GRInterract = superSlider("GRInterract","GRInterract", 0, 'GRInterractValue');
+
+
 let yellow = create(Yparticles, "yellow");
 let red = create(Rparticles,"red");
-// green = create(200, "green");
+let green = create(Gparticles, "green");
+
 
 
 function update(){
-    rule(red, red, -0.1);
-    rule(red, yellow, -0.01);
-    rule(yellow, red, 0.01);
-    // rule(green, green, -0.7)
-    // rule(green, red, -0.5)
-    // rule(red, green, -0.1)
-    // rule(yellow, green, 0.1)
+    rule(red, red, RRInterract);
+    rule(yellow, yellow, YYInterract);
+    rule(red, yellow, RYInterract);
+    rule(yellow, red, YRInterract);
+    rule(green, green, GGInterract);
+    rule(green, yellow, GYInterract)
+    rule(green, red, GRInterract)
+    rule(red, green, RGInterract)
+    rule(yellow, green, YGInterract);
     
     m.clearRect(0,0,500,500);
     draw(0,0,"black", 500);
@@ -94,13 +112,8 @@ function superSlider(idSlider, idItem, sourceNumber, screen ){
         let previousValue = slider.value;
         localStorage.setItem(idItem, previousValue);
         sliderScreen.value =  localStorage.getItem(idItem);
-        // console.log(previousValue)
         location.reload();
         });
-    // console.log(localStorage);
-    // console.log(previousValue);
-    // console.log(slider.value);
-    console.log(localStorage.getItem(idItem))
     return (currentValue);
 }
 
@@ -111,4 +124,72 @@ function updateTextInput(val, screen) {
 }
 updateTextInput(Yparticles, 'YparticlesValue');
 updateTextInput(Rparticles, 'RparticlesValue');
+updateTextInput(Gparticles, 'GparticlesValue');
 
+updateTextInput(RRInterract, 'RRInterractValue');
+updateTextInput(RYInterract, 'RYInterractValue');
+updateTextInput(RGInterract, 'RGInterractValue');
+
+updateTextInput(YYInterract, 'YYInterractValue');
+updateTextInput(YRInterract, 'YRInterractValue');
+updateTextInput(YGInterract, 'YGInterractValue');
+
+updateTextInput(GGInterract, 'GGInterractValue');
+updateTextInput(GYInterract, 'GYInterractValue');
+updateTextInput(GRInterract, 'GRInterractValue');
+
+// reset & random buttons
+
+// function stateResetButton(){
+//     let resetButton = document.getElementById("resetButton");
+//     let isClicked = localStorage.hasOwnProperty("state") ? (localStorage.getItem("state") === "true") : true;
+//     resetButton.addEventListener("click", e => {
+//         isClicked = !isClicked;
+//         localStorage.setItem("state", isClicked);
+//         location.reload();
+//     })
+   
+//     return isClicked;
+// }
+// console.log(stateResetButton())
+
+
+let resetButton = document.getElementById("resetButton");
+resetButton.addEventListener("click", e => {
+    localStorage.clear();
+    location.reload();
+})
+
+let randButton = document.getElementById("randButton");
+randButton.addEventListener("click", e => {
+    localStorage.setItem("Yparticles", Math.floor(Math.random() * 200));
+    localStorage.setItem("Rparticles", Math.floor(Math.random() * 200));
+    localStorage.setItem("Gparticles", Math.floor(Math.random() * 200));
+    localStorage.setItem("RRInterract", (Math.random() * 10)-5);
+    localStorage.setItem("RYInterract", (Math.random() * 10)-5);;
+    localStorage.setItem("RGInterract", (Math.random() * 10)-5);;
+    localStorage.setItem("YYInterract", (Math.random() * 10)-5);;
+    localStorage.setItem("YRInterract", (Math.random() * 10)-5);;
+    localStorage.setItem("YGInterract", (Math.random() * 10)-5);;
+    localStorage.setItem("GGInterract", (Math.random() * 10)-5);;
+    localStorage.setItem("GYInterract", (Math.random() * 10)-5);;
+    localStorage.setItem("GRInterract", (Math.random() * 10)-5);;
+    location.reload();
+})
+
+// function randomizeSlider(idSlider, idItem, sourceNumber, screen ){
+//     let slider = document.getElementById(idSlider);
+//     let sliderScreen = document.getElementById(screen)
+//     slider.value = (localStorage.getItem(idItem)) ?  localStorage.getItem(idItem) : sourceNumber;
+//     sliderScreen.value =  (localStorage.getItem(idItem)) ?  localStorage.getItem(idItem) : sourceNumber;;
+
+   
+//     let currentValue =  slider.value;
+//     slider.addEventListener("mouseup",  e => {
+//         let previousValue = slider.value;
+//         localStorage.setItem(idItem, previousValue);
+//         sliderScreen.value =  localStorage.getItem(idItem);
+//         location.reload();
+//         });
+//     return (currentValue);
+// }

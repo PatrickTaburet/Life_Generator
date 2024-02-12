@@ -9,7 +9,7 @@
 <body>
     <h1>LIFE SIMULATOR</h1>
     <div class="interfaceContainer">
-      
+      <!------- TEAM YELLOW -------->
         <div class="settingsPannel">
             <div class="yellowSettings">
                 <p class="titleSettings" >Yellow Particles</p>
@@ -19,20 +19,24 @@
                     <p class="titleSlider">Number of particles</p>
                 </div>
                 <div class="slidecontainer">
-                    <p class="titleSlider">Zoom</p>
-                    <input type="range" min="0" max="50" class="slider" id="zoomSlider" />
+                    <input type="text" id="YYInterractValue" class="sliderValues" value="">
+                    <input type="range" min="-5" max="5" class="slider" id="YYInterract" step="0.05" />
+                    <p class="titleSlider">Yellow / Yellow interaction</p>
                 </div>
                 <div class="slidecontainer">
-                    <p class="titleSlider">Curve</p>
-                    <input type="range" min="0" max="200" class="slider" id="curveSlider" />
+                    <input type="text" id="YRInterractValue" class="sliderValues" value="">
+                    <input type="range" min="-5" max="5" class="slider" id="YRInterract" step="0.05" />
+                    <p class="titleSlider">Yellow / Red interaction</p>
                 </div>
                 
                 <div class="slidecontainer">
-                    <p class="titleSlider">Particles</p>
-                    <input type="range" min="0" max="2000" class="slider" id="ddd" />
+                    <input type="text" id="YGInterractValue" class="sliderValues" value="">
+                    <input type="range" min="-5" max="5" class="slider" id="YGInterract" step="0.05" />
+                    <p class="titleSlider">Yellow / Green interaction</p>
                 </div>
                 
             </div>
+        <!------- TEAM RED ------->
             <div class="redSettings">
                 <p class="titleSettings">Red Particles</p>
                 <div class="slidecontainer">
@@ -42,19 +46,60 @@
                     
                 </div>
                 <div class="slidecontainer">
-                    <p class="titleSlider">Zoom</p>
-                    <input type="range" min="0" max="50" class="slider" id="zoomSlider" />
+                    <input type="text" id="RRInterractValue" class="sliderValues" value="">
+                    <input type="range" min="-5" max="5" class="slider" id="RRInterract" step="0.05" />
+                    <p class="titleSlider">Red / Red interaction</p>
                 </div>
                 <div class="slidecontainer">
-                    <p class="titleSlider">Curve</p>
-                    <input type="range" min="0" max="200" class="slider" id="curveSlider" />
+                    <input type="text" id="RYInterractValue" class="sliderValues" value="">
+                    <input type="range" min="-5" max="5" class="slider" id="RYInterract" step="0.05" />
+                    <p class="titleSlider">Red / Yellow interaction</p>
                 </div>
                 
                 <div class="slidecontainer">
-                    <p class="titleSlider">Particles</p>
-                    <input type="range" min="0" max="2000" class="slider" />
+                    <input type="text" id="RGInterractValue" class="sliderValues" value="">
+                    <input type="range" min="-5" max="5" class="slider" id="RGInterract" step="0.05" />
+                    <p class="titleSlider">Red / Green interaction</p>
                 </div>
             </div>
+             <!------- TEAM GREEN ------->
+             <div class="redSettings">
+                <p class="titleSettings">Green Particles</p>
+                <div class="slidecontainer">
+                    <input type="text" id="GparticlesValue" class="sliderValues" value="">
+                    <input type="range" min="1" max="300" class="slider" id="Gparticles" />
+                    <p class="titleSlider">Number of particles</p>
+                    
+                </div>
+                <div class="slidecontainer">
+                    <input type="text" id="GGInterractValue" class="sliderValues" value="">
+                    <input type="range" min="-5" max="5" class="slider" id="GGInterract" step="0.05" />
+                    <p class="titleSlider">Green / Green interaction</p>
+                </div>
+                <div class="slidecontainer">
+                    <input type="text" id="GYInterractValue" class="sliderValues" value="">
+                    <input type="range" min="-5" max="5" class="slider" id="GYInterract" step="0.05" />
+                    <p class="titleSlider">Green / Yellow interaction</p>
+                </div>
+                
+                <div class="slidecontainer">
+                    <input type="text" id="GRInterractValue" class="sliderValues" value="">
+                    <input type="range" min="-5" max="5" class="slider" id="GRInterract" step="0.05" />
+                    <p class="titleSlider">Green / Red interaction</p>
+                </div>
+            </div>
+            <div class="buttonPannel">
+                <div class='buttonContainer'>
+                    <button id="randButton"></button>
+                    <p class="titleSlider">Random Settings</p>
+                </div>
+                <div class='buttonContainer'>
+                    <button id="resetButton"></button>
+                    <p class="titleSlider">Clear Settings</p>
+                </div>
+            </div>
+            
+            
         </div>
         <canvas id="life" width="500" height="500"></canvas>
     </div>

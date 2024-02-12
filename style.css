@@ -84,3 +84,33 @@ h1{
 .titleSlider{
   margin: auto;
 }
+
+/* Reset button */
+
+#resetButton, #randButton{
+  display: flex;
+  width: 50px;
+  height: 50px;
+  z-index: 5;
+  border-radius: 50%;
+  background-color: #3bff45;
+  justify-content: center;
+  margin: 20px;
+  
+}
+#resetButton:hover{
+  background-color: #3bff456e;
+  cursor: pointer;
+}
+.buttonContainer{
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.381);
+  width: 150px;
+  height: 110px;
+  margin: 15px;
+  padding: 10px;
+}
