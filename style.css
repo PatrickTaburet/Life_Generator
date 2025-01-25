@@ -1,13 +1,19 @@
+body{
+  background-color: rgb(134, 0, 192);
+}
 h1{
+    font-size: 50px;
     display: flex;
     justify-content: center;
     margin: 70px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: rgb(255, 247, 247);
 }
-
 .interfaceContainer{
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  margin-top: 110px;
 }
 /* range slider */
 
@@ -84,6 +90,7 @@ h1{
 }
 .titleSlider{
   margin: auto;
+  color: rgb(255, 247, 247);
 }
 
 /* Reset button */

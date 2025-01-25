@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.1/lib/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
 </head>
 <body>
     <h1>LIFE SIMULATOR</h1>
@@ -12,7 +14,7 @@
       <!------- TEAM YELLOW -------->
         <div class="settingsPannel">
             <div class="yellowSettings">
-                <p class="titleSettings" >Yellow Particles</p>
+                <p class="titleSettings" style="color: yellow">Yellow Particles</p>
                 <div class="slidecontainer">
                     <input type="text" id="YparticlesValue" class="sliderValues" value="">
                     <input type="range" min="1" max="300" class="slider" id="Yparticles" />
@@ -38,7 +40,7 @@
             </div>
         <!------- TEAM RED ------->
             <div class="redSettings">
-                <p class="titleSettings">Red Particles</p>
+                <p class="titleSettings" style="color: red">Red Particles</p>
                 <div class="slidecontainer">
                     <input type="text" id="RparticlesValue" class="sliderValues" value="">
                     <input type="range" min="1" max="300" class="slider" id="Rparticles" />
@@ -63,8 +65,8 @@
                 </div>
             </div>
              <!------- TEAM GREEN ------->
-             <div class="redSettings">
-                <p class="titleSettings">Green Particles</p>
+             <div class="greenSettings">
+                <p class="titleSettings" style="color: green">Green Particles</p>
                 <div class="slidecontainer">
                     <input type="text" id="GparticlesValue" class="sliderValues" value="">
                     <input type="range" min="1" max="300" class="slider" id="Gparticles" />
@@ -103,15 +105,12 @@
                     <input type="range" min="0" max="200" class="slider" id="distanceInterract" step="0.05" />
                     <p class="titleSlider">Max distance interaction</p>
                 </div>
-            </div>
-            
-            
-            
+            </div>            
         </div>
         <!-- CANVAS FOR THE ANIMATION / SIMULATION -->
         <canvas id="life" width="500" height="500"></canvas>
     </div>
-  
+    
     <script  src="/index.js"></script> 
 </body>
 </html>
