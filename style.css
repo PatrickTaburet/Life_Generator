@@ -1,5 +1,9 @@
 body{
   background-color: rgb(134, 0, 192);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 h1{
     font-size: 50px;
@@ -9,14 +13,23 @@ h1{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     color: rgb(255, 247, 247);
 }
-.interfaceContainer{
+.sketchContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+canvas {
+  border: solid 5px aqua;
+  border-radius: 25px;
+}
+/* .interfaceContainer{
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   margin-top: 110px;
-}
+} */
 /* range slider */
-
+/* 
 .slidecontainer{
     height: 75px;
     display: flex;
@@ -91,11 +104,11 @@ h1{
 .titleSlider{
   margin: auto;
   color: rgb(255, 247, 247);
-}
+} */
 
 /* Reset button */
 
-#resetButton, #randButton{
+/* #resetButton, #randButton{
   display: flex;
   width: 50px;
   height: 50px;
@@ -121,4 +134,4 @@ h1{
   height: 110px;
   margin: 15px;
   padding: 10px;
-}
+} */

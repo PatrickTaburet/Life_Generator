@@ -1,0 +1,452 @@
+
+
+
+
+    m = document.querySelector("#life").getContext('2d');
+
+function draw(x,y,c,s){
+    m.fillStyle = c;
+    m.fillRect(x, y, s, s);
+}
+
+particles =[];
+function particle(x,y,c){
+    return {"x":x, "y": y, 'vx':0, 'vy':0, "color":c };
+}   
+
+function random(){
+    return Math.random()*400+50;
+}
+
+function create(number, color){
+    group=[];
+    for(let i=0; i < number; i++){
+        group.push(particle(random(), random(), color));
+        particles.push(group[i]);
+    }
+    return group;
+}
+function rule (particles1, particles2, g){
+    for (let i=0; i<particles1.length; i++) { 
+        fx=0;
+        fy=0;
+        for(let j=0; j < particles2.length; j++){
+        // pythagore pour calculer la distance entre 2 points
+            a = particles1[i];
+            b = particles2[j];
+            dx = a.x - b.x;
+            dy = a.y - b.y;
+            d = Math.sqrt(dx*dx + dy * dy);
+
+        // force d'attraction [ F1 = F2 = G*(m1m2/r2)] comme m=1, F=G*1/d2
+            if (d > 0 && d < distanceInterract) {
+                F = g *1/d;
+                fx += (F*dx);
+                fy += (F*dy);
+            }
+        }
+        a.vx = (a.vx + fx)*0.5;
+        a.vy = (a.vy + fy)*0.5;
+        a.x += a.vx;
+        a.y += a.vy;
+        if ((a.x <= 0) || (a.x >= 500)){a.vx *= -1 };
+        if ((a.y <= 0) || (a.y >= 500)){a.vy *= -1 };
+
+
+    }
+
+    let Yparticles = superSlider("Yparticles","Yparticles", 100, 'YparticlesValue');
+    let Rparticles = superSlider("Rparticles","Rparticles", 100, 'RparticlesValue');
+    let Gparticles = superSlider("Gparticles","Gparticles", 100, 'GparticlesValue');
+    
+    let RRInterract = superSlider("RRInterract","RRInterract", 0, 'RRInterractValue');
+    let RYInterract = superSlider("RYInterract","RYInterract", 0, 'RYInterractValue');
+    let RGInterract = superSlider("RGInterract","RGInterract", 0, 'RGInterractValue');
+    
+    let YYInterract = superSlider("YYInterract","YYInterract", 0, 'YYInterractValue');
+    let YRInterract = superSlider("YRInterract","YRInterract", 0, 'YRInterractValue');
+    let YGInterract = superSlider("YGInterract","YGInterract", 0, 'YGInterractValue');
+    
+    let GGInterract = superSlider("GGInterract","GGInterract", 0, 'GGInterractValue');
+    let GYInterract = superSlider("GYInterract","GYInterract", 0, 'GYInterractValue');
+    let GRInterract = superSlider("GRInterract","GRInterract", 0, 'GRInterractValue');
+    
+    let distanceInterract = superSlider("distanceInterract","distanceInterract", 80, 'distanceInterractValue');
+    
+    
+    let yellow = create(Yparticles, "yellow");
+    let red = create(Rparticles,"red");
+    let green = create(Gparticles, "green");
+    
+    console.log(GRInterract)
+    
+    function update(){
+        rule(red, red, RRInterract);
+        rule(yellow, yellow, YYInterract);
+        rule(red, yellow, RYInterract);
+        rule(yellow, red, YRInterract);
+        rule(green, green, GGInterract);
+        rule(green, yellow, GYInterract)
+        rule(green, red, GRInterract)
+        rule(red, green, RGInterract)
+        rule(yellow, green, YGInterract);
+        
+        m.clearRect(0,0,500,500);
+        draw(0,0,"black", 500);
+        for(i=0; i<particles.length; i++){
+            draw(particles[i].x, particles[i].y, particles[i].color ,5);
+        }
+        requestAnimationFrame(update);
+    }
+    update();
+    
+    
+    // range slider : to controll settings with a slider (interractions, global settings, number of perticles)
+    
+    
+    function superSlider(idSlider, idItem, sourceNumber, screen ){
+        let slider = document.getElementById(idSlider);
+        let sliderScreen = document.getElementById(screen)
+        slider.value = (localStorage.getItem(idItem)) ?  localStorage.getItem(idItem) : sourceNumber;
+        sliderScreen.value =  (localStorage.getItem(idItem)) ?  localStorage.getItem(idItem) : sourceNumber;;
+    
+       
+        let currentValue =  slider.value;
+        slider.addEventListener("mouseup",  e => {
+            let previousValue = slider.value;
+            localStorage.setItem(idItem, previousValue);
+            sliderScreen.value =  localStorage.getItem(idItem);
+            location.reload();
+            });
+        return (currentValue);
+
+        // to visualize the actual value of the sliders
+
+        function updateTextInput(val, screen) {
+            document.getElementById(screen).value=val; 
+        }
+        updateTextInput(Yparticles, 'YparticlesValue');
+        updateTextInput(Rparticles, 'RparticlesValue');
+        updateTextInput(Gparticles, 'GparticlesValue');
+        
+        updateTextInput(RRInterract, 'RRInterractValue');
+        updateTextInput(RYInterract, 'RYInterractValue');
+        updateTextInput(RGInterract, 'RGInterractValue');
+        
+        updateTextInput(YYInterract, 'YYInterractValue');
+        updateTextInput(YRInterract, 'YRInterractValue');
+        updateTextInput(YGInterract, 'YGInterractValue');
+        
+        updateTextInput(GGInterract, 'GGInterractValue');
+        updateTextInput(GYInterract, 'GYInterractValue');
+        updateTextInput(GRInterract, 'GRInterractValue');
+        
+        updateTextInput(distanceInterract, 'distanceInterractValue');
+        
+        // reset & random buttons
+        
+        
+        let resetButton = document.getElementById("resetButton");
+        resetButton.addEventListener("click", e => {
+            localStorage.clear();
+            location.reload();
+        })
+        
+        let randButton = document.getElementById("randButton");
+        randButton.addEventListener("click", e => {
+            localStorage.setItem("Yparticles", Math.floor(Math.random() * 300));
+            localStorage.setItem("Rparticles", Math.floor(Math.random() * 300));
+            localStorage.setItem("Gparticles", Math.floor(Math.random() * 300));
+            localStorage.setItem("RRInterract", (Math.random() * 10)-5);
+            localStorage.setItem("RYInterract", (Math.random() * 10)-5);
+            localStorage.setItem("RGInterract", (Math.random() * 10)-5);
+            localStorage.setItem("YYInterract", (Math.random() * 10)-5);
+            localStorage.setItem("YRInterract", (Math.random() * 10)-5);
+            localStorage.setItem("YGInterract", (Math.random() * 10)-5);
+            localStorage.setItem("GGInterract", (Math.random() * 10)-5);
+            localStorage.setItem("GYInterract", (Math.random() * 10)-5);
+            localStorage.setItem("GRInterract", (Math.random() * 10)-5);
+            location.reload();
+        })
+        
+        // --> add all differents variables paricles in an array to make loop foreach
+        
+                
+
+
+        ---------------------------------------------------
+
+
+        let particles = [];
+let distanceInteract;
+
+class Particle {
+    constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.vx = 0;
+        this.vy = 0;
+        this.color = color;
+    }
+
+    update() {
+        // Update particle position and handle boundaries
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x <= 0 || this.x >= width) this.vx *= -1;
+        if (this.y <= 0 || this.y >= height) this.vy *= -1;
+    }
+
+    display() {
+        fill(this.color);
+        noStroke();
+        rect(this.x, this.y, 5, 5);
+    }
+}
+
+function setup() {
+    createCanvas(500, 500);
+    distanceInteract = 80; // Default value for interaction distance
+    createParticles();
+}
+
+function createParticles() {
+    let Yparticles = parseInt(document.getElementById("Yparticles").value);
+    let Rparticles = parseInt(document.getElementById("Rparticles").value);
+    let Gparticles = parseInt(document.getElementById("Gparticles").value);
+    
+    for (let i = 0; i < Yparticles; i++) {
+        particles.push(new Particle(random(width), random(height), "yellow"));
+    }
+    for (let i = 0; i < Rparticles; i++) {
+        particles.push(new Particle(random(width), random(height), "red"));
+    }
+    for (let i = 0; i < Gparticles; i++) {
+        particles.push(new Particle(random(width), random(height), "green"));
+    }
+}
+
+function draw() {
+    background(0);
+    for (let particle of particles) {
+        particle.update();
+        particle.display();
+    }
+}
+
+let RYInterract = superSlider("RYInterract","RYInterract", 0, 'RYInterractValue');
+let RGInterract = superSlider("RGInterract","RGInterract", 0, 'RGInterractValue');
+
+let YYInterract = superSlider("YYInterract","YYInterract", 0, 'YYInterractValue');
+let YRInterract = superSlider("YRInterract","YRInterract", 0, 'YRInterractValue');
+let YGInterract = superSlider("YGInterract","YGInterract", 0, 'YGInterractValue');
+
+let GGInterract = superSlider("GGInterract","GGInterract", 0, 'GGInterractValue');
+let GYInterract = superSlider("GYInterract","GYInterract", 0, 'GYInterractValue');
+let GRInterract = superSlider("GRInterract","GRInterract", 0, 'GRInterractValue');
+
+let distanceInterract = superSlider("distanceInterract","distanceInterract", 80, 'distanceInterractValue');
+
+
+let yellow = create(Yparticles, "yellow");
+let red = create(Rparticles,"red");
+let green = create(Gparticles, "green");
+
+console.log(GRInterract)
+
+function update(){
+    rule(red, red, RRInterract);
+    rule(yellow, yellow, YYInterract);
+    rule(red, yellow, RYInterract);
+    rule(yellow, red, YRInterract);
+    rule(green, green, GGInterract);
+    rule(green, yellow, GYInterract)
+    rule(green, red, GRInterract)
+    rule(red, green, RGInterract)
+    rule(yellow, green, YGInterract);
+    
+    m.clearRect(0,0,500,500);
+    draw(0,0,"black", 500);
+    
+    for(i=0; i<particles.length; i++){
+        draw(particles[i].x, particles[i].y, particles[i].color ,5);
+    }
+    requestAnimationFrame(update);
+}
+update();
+
+
+// range slider : to controll settings with a slider (interractions, global settings, number of perticles)
+
+
+function superSlider(idSlider, idItem, sourceNumber, screen ){
+    let slider = document.getElementById(idSlider);
+    let sliderScreen = document.getElementById(screen)
+    slider.value = (localStorage.getItem(idItem)) ?  localStorage.getItem(idItem) : sourceNumber;
+    sliderScreen.value =  (localStorage.getItem(idItem)) ?  localStorage.getItem(idItem) : sourceNumber;;
+
+   
+    let currentValue =  slider.value;
+    slider.addEventListener("mouseup",  e => {
+        let previousValue = slider.value;
+        localStorage.setItem(idItem, previousValue);
+        sliderScreen.value =  localStorage.getItem(idItem);
+        location.reload();
+        });
+    return (currentValue);
+}
+
+// to visualize the actual value of the sliders
+
+function updateTextInput(val, screen) {
+    document.getElementById(screen).value=val; 
+}
+updateTextInput(Yparticles, 'YparticlesValue');
+updateTextInput(Rparticles, 'RparticlesValue');
+updateTextInput(Gparticles, 'GparticlesValue');
+
+updateTextInput(RRInterract, 'RRInterractValue');
+updateTextInput(RYInterract, 'RYInterractValue');
+updateTextInput(RGInterract, 'RGInterractValue');
+
+updateTextInput(YYInterract, 'YYInterractValue');
+updateTextInput(YRInterract, 'YRInterractValue');
+updateTextInput(YGInterract, 'YGInterractValue');
+
+updateTextInput(GGInterract, 'GGInterractValue');
+updateTextInput(GYInterract, 'GYInterractValue');
+updateTextInput(GRInterract, 'GRInterractValue');
+
+updateTextInput(distanceInterract, 'distanceInterractValue');
+
+// reset & random buttons
+
+
+let resetButton = document.getElementById("resetButton");
+resetButton.addEventListener("click", e => {
+    localStorage.clear();
+    location.reload();
+})
+
+let randButton = document.getElementById("randButton");
+randButton.addEventListener("click", e => {
+    localStorage.setItem("Yparticles", Math.floor(Math.random() * 300));
+    localStorage.setItem("Rparticles", Math.floor(Math.random() * 300));
+    localStorage.setItem("Gparticles", Math.floor(Math.random() * 300));
+    localStorage.setItem("RRInterract", (Math.random() * 10)-5);
+    localStorage.setItem("RYInterract", (Math.random() * 10)-5);
+    localStorage.setItem("RGInterract", (Math.random() * 10)-5);
+    localStorage.setItem("YYInterract", (Math.random() * 10)-5);
+    localStorage.setItem("YRInterract", (Math.random() * 10)-5);
+    localStorage.setItem("YGInterract", (Math.random() * 10)-5);
+    localStorage.setItem("GGInterract", (Math.random() * 10)-5);
+    localStorage.setItem("GYInterract", (Math.random() * 10)-5);
+    localStorage.setItem("GRInterract", (Math.random() * 10)-5);
+    location.reload();
+})
+
+// --> add all differents variables paricles in an array to make loop foreach
+
+
+
+
+<div class="interfaceContainer">
+<!------- TEAM YELLOW -------->
+  <div class="settingsPannel">
+      <div class="yellowSettings">
+          <p class="titleSettings" style="color: yellow">Yellow Particles</p>
+          <div class="slidecontainer">
+              <input type="text" id="YparticlesValue" class="sliderValues" value="">
+              <input type="range" min="1" max="300" class="slider" id="Yparticles" />
+              <p class="titleSlider">Number of particles</p>
+          </div>
+          <div class="slidecontainer">
+              <input type="text" id="YYInterractValue" class="sliderValues" value="">
+              <input type="range" min="-5" max="5" class="slider" id="YYInterract" step="0.05" />
+              <p class="titleSlider">Yellow / Yellow interaction</p>
+          </div>
+          <div class="slidecontainer">
+              <input type="text" id="YRInterractValue" class="sliderValues" value="">
+              <input type="range" min="-5" max="5" class="slider" id="YRInterract" step="0.05" />
+              <p class="titleSlider">Yellow / Red interaction</p>
+          </div>
+          
+          <div class="slidecontainer">
+              <input type="text" id="YGInterractValue" class="sliderValues" value="">
+              <input type="range" min="-5" max="5" class="slider" id="YGInterract" step="0.05" />
+              <p class="titleSlider">Yellow / Green interaction</p>
+          </div>
+          
+      </div>
+  <!------- TEAM RED ------->
+      <div class="redSettings">
+          <p class="titleSettings" style="color: red">Red Particles</p>
+          <div class="slidecontainer">
+              <input type="text" id="RparticlesValue" class="sliderValues" value="">
+              <input type="range" min="1" max="300" class="slider" id="Rparticles" />
+              <p class="titleSlider">Number of particles</p>
+              
+          </div>
+          <div class="slidecontainer">
+              <input type="text" id="RRInterractValue" class="sliderValues" value="">
+              <input type="range" min="-5" max="5" class="slider" id="RRInterract" step="0.05" />
+              <p class="titleSlider">Red / Red interaction</p>
+          </div>
+          <div class="slidecontainer">
+              <input type="text" id="RYInterractValue" class="sliderValues" value="">
+              <input type="range" min="-5" max="5" class="slider" id="RYInterract" step="0.05" />
+              <p class="titleSlider">Red / Yellow interaction</p>
+          </div>
+          
+          <div class="slidecontainer">
+              <input type="text" id="RGInterractValue" class="sliderValues" value="">
+              <input type="range" min="-5" max="5" class="slider" id="RGInterract" step="0.05" />
+              <p class="titleSlider">Red / Green interaction</p>
+          </div>
+      </div>
+       <!------- TEAM GREEN ------->
+       <div class="greenSettings">
+          <p class="titleSettings" style="color: green">Green Particles</p>
+          <div class="slidecontainer">
+              <input type="text" id="GparticlesValue" class="sliderValues" value="">
+              <input type="range" min="1" max="300" class="slider" id="Gparticles" />
+              <p class="titleSlider">Number of particles</p>
+              
+          </div>
+          <div class="slidecontainer">
+              <input type="text" id="GGInterractValue" class="sliderValues" value="">
+              <input type="range" min="-5" max="5" class="slider" id="GGInterract" step="0.05" />
+              <p class="titleSlider">Green / Green interaction</p>
+          </div>
+          <div class="slidecontainer">
+              <input type="text" id="GYInterractValue" class="sliderValues" value="">
+              <input type="range" min="-5" max="5" class="slider" id="GYInterract" step="0.05" />
+              <p class="titleSlider">Green / Yellow interaction</p>
+          </div>
+          
+          <div class="slidecontainer">
+              <input type="text" id="GRInterractValue" class="sliderValues" value="">
+              <input type="range" min="-5" max="5" class="slider" id="GRInterract" step="0.05" />
+              <p class="titleSlider">Green / Red interaction</p>
+          </div>
+      </div>
+      <!-- BUTTONS PANNEL -->
+      <div class="buttonPannel">
+          <div class='buttonContainer'>
+              <button id="randButton"></button>
+              <p class="titleSlider">Random Settings</p>
+          </div>
+          <div class='buttonContainer'>
+              <button id="resetButton"></button>
+              <p class="titleSlider">Clear Settings</p>
+          </div>
+          <div class="slidecontainer">
+              <input type="text" id="distanceInterractValue" class="sliderValues" value="">
+              <input type="range" min="0" max="200" class="slider" id="distanceInterract" step="0.05" />
+              <p class="titleSlider">Max distance interaction</p>
+          </div>
+      </div>            
+  </div>
+  <!-- CANVAS FOR THE ANIMATION / SIMULATION -->
+  <canvas id="life" width="500" height="500"></canvas>
+</div>

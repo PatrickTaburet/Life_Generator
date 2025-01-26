@@ -1,5 +1,6 @@
 let particles = [];
-let gui; // Ajout d'une référence globale à dat.GUI
+let gui; 
+let isBackground = true;
 let props = {
     'Yellow Particles': 50,
     'Red Particles': 50,
@@ -15,7 +16,7 @@ let props = {
     'G/R interaction': 0,
     'Max distance interaction': 100,
     'Reset': function () {
-        // Réinitialiser les propriétés aux valeurs initiales
+        // Reset to initial props values
         props['Yellow Particles'] = 50;
         props['Red Particles'] = 50;
         props['Green Particles'] = 50;
@@ -31,9 +32,9 @@ let props = {
         props['Max distance interaction'] = 100;
 
         particles = [];
+        background(0);
         setupParticles();
-
-        // Mettre à jour l'affichage des sliders
+        // Update sliders display
         gui.updateDisplay();
     },
     'Random': function () {
@@ -52,14 +53,18 @@ let props = {
         props['Max distance interaction'] = Math.floor(Math.random() * 200);
 
         particles = [];
+        background(0);
         setupParticles();
-
-        // Mettre à jour l'affichage des sliders
+        // Update sliders display
         gui.updateDisplay();
+    },
+    'Background': function () {
+        isBackground = !isBackground;
     }
 };
 
 function setupParticles() {
+    
     createParticles(props['Yellow Particles'], 'yellow');
     createParticles(props['Red Particles'], 'red');
     createParticles(props['Green Particles'], 'green');
@@ -115,8 +120,8 @@ function drawParticles() {
 }
 
 function setup() {
-    createCanvas(500, 500);
-
+    const canvas = createCanvas(700, 700);
+    canvas.parent("sketchContainer");
     // Initialize dat.GUI
     gui = new dat.GUI();
     let particlesSettings = gui.addFolder("Particles Settings");
@@ -156,12 +161,13 @@ function setup() {
     globalSettings.add(props, 'Max distance interaction', 0, 200, 1);
     globalSettings.add(props, 'Reset');
     globalSettings.add(props, 'Random');
+    globalSettings.add(props, 'Background');
 
     setupParticles();
 }
 
 function draw() {
-    background(0);
+    isBackground && background(0);
 
     // Apply rules for interactions
     applyRules(particles.filter(p => p.color === 'yellow'), particles.filter(p => p.color === 'yellow'), props['Y/Y interaction']);
