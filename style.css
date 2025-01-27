@@ -1,17 +1,19 @@
+
 body{
-  background-color: rgb(134, 0, 192);
+  background-color: rgb(22, 34, 32);
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
+
 h1{
-    font-size: 50px;
-    display: flex;
-    justify-content: center;
-    margin: 45px;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    color: rgb(255, 247, 247);
+  font-size: 50px;
+  display: flex;
+  justify-content: center;
+  margin: 45px;
+  font-family: "Audiowide", serif;
+  color: #dafaf4;
 }
 .sketchContainer{
   display: flex;
@@ -19,14 +21,46 @@ h1{
   align-items: center;
 }
 canvas {
-  border: solid 5px aqua;
+  border: solid 5px #3815eb;
   border-radius: 25px;
 }
-
-.whiteFolder .dg.title {
-  color: green; /* Change la couleur du texte en vert */
+.description{
+  padding: 15px;
+  position: absolute;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  left: 0;
+  margin: 5vw;
+  background-color: #92e6dcd3;
+  width: 20vw;
+  height: 70%;
+  border-radius: 15px;
+  border: solid 5px #3815eb;
+  color: #137c99;
+  font-size: 30px;
+  min-width: 230px;
 }
+.save-button{
+  background-color: #2FA1D6;
+  padding: 12px 20px 12px 20px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  margin: 0 auto;
+}
+.save-button span{
+  margin-bottom: 15px;
+  color: #dafaf4;
+  font-family: "Audiowide", serif;
+  font-size: 20px;
+}
+.save-button:hover{
+  background-color: #137c99;
 
-.whiteFolder {
-  background-color: yellow; /* Change la couleur de fond de l'onglet en jaune */
+}
+.download-icon{
+  width: 20px;
+  margin-right: 5px;
+
 }
