@@ -1,115 +1,23 @@
     let particles = [];
     let guiMain, guiColorManager, colorListFolder; 
     let isBackground = true;
-    const colors = ["Yellow", "Blue", "Green", "Red"]
+    const colors = ["White", "Blue", "Green", "Red"]
 
     const props = {
         'Max distance interaction': 100,
         'Scale': 1,
         'Reset': resetProps,
         'Random': randomizeProps,
-        'Background': () => isBackground = !isBackground,
-    };
-
-    const colorManager = {
-        'New Color': '#ffffff', 
-        'Add Color': addColor,
+        'Drawing Mode': () => isBackground = !isBackground,
     };
 
     colors.forEach(color => {
         props[`${color} Particles`] = 50;
         props[`${color} Visible`] = true; 
         colors.forEach(otherColor => {
-            props[`${color[0]}/${otherColor[0]} interaction`] = 0;
+            props[`${color[0]} <--> ${otherColor[0]}`] = 0;
         })
     });
-
-    function addColor() {
-        // !! Convertir la couleur hexadécimale en nom  !!
-        const newColor = colorManager['New Color'];
-        const colorName = capitalize(newColor.replace('#', 'Color ')); 
-    
-        if (!colors.includes(colorName)) {
-        colors.push(colorName);
-    
-        // Add new properties for this color
-        props[`${colorName} Particles`] = 50;
-        props[`${colorName} Visible`] = true;
-    
-        // Add interactions with other colors
-        colors.forEach(existingColor => {
-            props[`${colorName[0]}/${existingColor[0]} interaction`] = 0;
-            props[`${existingColor[0]}/${colorName[0]} interaction`] = 0;
-        });
-    
-        // Update GUI
-        updateParticleSettingsGUI(colorName);
-        updateColorManagerGUI(colorName);
-    
-        updateParticles();
-        }
-    }
-    function updateParticleSettingsGUI(color) {
-        // Add the new color to the main GUI
-        const particlesFolder = guiMain.__folders['Particles Settings'];
-        const colorFolder = particlesFolder.addFolder(color);
-
-        colorFolder.add(props, `${color} Particles`, 0, 300, 1).onChange(updateParticles);
-        colors.forEach(otherColor => {
-            colorFolder.add(props, `${color[0]}/${otherColor[0]} interaction`, -5, 5, 0.05);
-        });
-        colorFolder.add({ Delete: () => deleteColor(color) }, 'Delete');
-        colorFolder.open();
-    }
-    function deleteColor(color) {
-        // Remove the color from the colors array
-        const index = colors.indexOf(color);
-        if (index > -1) colors.splice(index, 1);
-
-        // Remove associated properties
-        delete props[`${color} Particles`];
-        delete props[`${color} Visible`];
-        colors.forEach(otherColor => {
-            delete props[`${color[0]}/${otherColor[0]} interaction`];
-            delete props[`${otherColor[0]}/${color[0]} interaction`];
-        });
-
-        // Remove particles of this color
-        particles = particles.filter(p => p.color !== color);
-
-        // Remove the corresponding folder in the GUI
-        const particlesFolder = guiMain.__folders['Particles Settings'];
-        if (particlesFolder.__folders[color]) {
-            particlesFolder.removeFolder(particlesFolder.__folders[color]);
-        }
-
-        // Remove the checkbox in the color manager
-        const controllers = colorListFolder.__controllers;
-        controllers.forEach((controller, index) => {
-            if (controller.property === `${color} Visible`) {
-                colorListFolder.__controllers[index].remove();
-            }
-        });
-        
-        // Remove interaction sliders with this color in other folders
-        colors.forEach(otherColor => {
-            const otherFolder = particlesFolder.__folders[otherColor];
-            if (otherFolder) {
-                const otherControllers = otherFolder.__controllers;
-                otherControllers.forEach((controller, index) => {
-                    const prop = controller.property;
-                    if (prop === `${otherColor[0]}/${color[0]} interaction` || prop === `${color[0]}/${otherColor[0]} interaction`) {
-                        otherControllers[index].remove();
-                    }
-                });
-            }
-        });
-        updateParticles();
-    }
-    function updateColorManagerGUI(color) {
-        // Add the new color in the color manager window
-        colorListFolder.add(props, `${color} Visible`).name(`${color} Visible`).onChange(updateParticles);
-    }
 
     function updateParticles() {
         particles = [];
@@ -124,7 +32,7 @@
             props[`${color} Particles`] = 50;
             props[`${color} Visible`] = true;
             colors.forEach(otherColor => {
-                props[`${color[0]}/${otherColor[0]} interaction`] = 0;
+                props[`${color[0]} <--> ${otherColor[0]}`] = 0;
             })
         });
         props['Max distance interaction'] = 100;
@@ -136,7 +44,7 @@
         colors.forEach(color => {
             props[`${color} Particles`] = Math.floor(Math.random() * 300);
             colors.forEach(otherColor => {
-                props[`${color[0]}/${otherColor[0]} interaction`] = (Math.random() * 10) - 5;
+                props[`${color[0]} <--> ${otherColor[0]}`] = (Math.random() * 10) - 5;
             })
         });
         props['Max distance interaction'] = Math.floor(Math.random() * 200);
@@ -158,10 +66,13 @@
             let colorSettings = particlesSettings.addFolder(color);
             colorSettings.open();
             colorSettings.add(props, `${color} Particles`, 0, 300, 1).onChange(updateParticles);
+            
+            // Color title
+            const folderTitle = colorSettings.__ul.querySelector('.dg .title');
+            if (folderTitle) folderTitle.style.color = color;
             colors.forEach(otherColor => {
-                colorSettings.add(props, `${color[0]}/${otherColor[0]} interaction`, -5, 5, 0.05);
+                colorSettings.add(props, `${color[0]} <--> ${otherColor[0]}`, -5, 5, 0.05);
             })
-            colorSettings.add({ Delete: () => deleteColor(color) }, 'Delete');
         });
 
         // Global settings
@@ -172,27 +83,22 @@
         });
         globalSettings.add(props, 'Reset');
         globalSettings.add(props, 'Random');
-        globalSettings.add(props, 'Background');
+        guiMain.add(props, 'Drawing Mode');
 
         // --- Color manager interface ---
         guiColorManager = new dat.GUI({ name: "Color Manager" });
         let colorManagerFolder = guiColorManager.addFolder("Color Manager");
-        colorListFolder = guiColorManager.addFolder("Color List");
-        colorManagerFolder.addColor(colorManager, 'New Color').name('Color Picker');
-        colorManagerFolder.add(colorManager, 'Add Color').name('Add Color');
 
         // Checkboxes for colors
         colors.forEach(color => {
-            colorListFolder.add(props, `${color} Visible`).name(`${color} Visible`).onChange(updateParticles);
+            colorManagerFolder.add(props, `${color} Visible`).name(`${color} Visible`).onChange(updateParticles);
             
         });
-
 
         // Open folders by default
         colorManagerFolder.open();
         particlesSettings.open();
         globalSettings.open();
-        colorListFolder.open();
         
         setupParticles();
     }
@@ -209,7 +115,7 @@
                 applyRules(
                     particles.filter(p => p.color === color1),
                     particles.filter(p => p.color === color2),
-                    props[`${color1[0]}/${color2[0]} interaction`]
+                    props[`${color1[0]} <--> ${color2[0]}`]
                 );
             });
         });
