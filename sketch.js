@@ -1,6 +1,10 @@
     let particles = [];
-    let guiMain, guiColorManager, colorListFolder; 
+    let guiMain, guiColorManager, colorListFolder, backgroundAlpha; 
     let isBackground = true;
+    let isNexus = false;
+    
+    // dat.GUI interface settings 
+
     const colors = ["White", "Blue", "Green", "Red"]
 
     const props = {
@@ -8,15 +12,20 @@
         'Scale': 1,
         'Reset': resetProps,
         'Random': randomizeProps,
-        'Drawing Mode': () => {
+        'drawingMode': () => {
             isBackground = !isBackground;
-            updateButtonColor();
+            updateButton('#drawing-mode-button', !isBackground);
         },
+        'nexusMode': () => {
+            isNexus = !isNexus;
+            updateButton('#nexus-mode-button', isNexus);
+        },
+        'backgroundAlpha' : 100,
     };
-    function updateButtonColor() {
-        const drawingModeButton = document.querySelector('#drawing-mode-button').parentElement;
+    function updateButton(buttonId, boolVariable, mainColor = 'red', secondColor = 'white' ) {
+        const drawingModeButton = document.querySelector(buttonId).parentElement;
         if (drawingModeButton) {
-            drawingModeButton.querySelector('.property-name').style.color = !isBackground ? 'red' : 'white';
+            drawingModeButton.querySelector('.property-name').style.color = boolVariable ? mainColor : secondColor;
         }
     }
     colors.forEach(color => {
@@ -45,6 +54,7 @@
         });
         props['Max distance interaction'] = 100;
         props['Scale'] = 1;
+        props['backgroundAlpha'] = 100;
         updateParticles();
     }
 
@@ -85,38 +95,55 @@
 
         // Global settings
         globalSettings.add(props, 'Max distance interaction', 0, 200, 1);
-        globalSettings.add(props, 'Scale', 0.1, 2, 0.1).onChange(() => {
-            particles = [];
-            setupParticles();
-        });
+ 
         globalSettings.add(props, 'Reset');
         globalSettings.add(props, 'Random');
-        let drawingButton = guiMain.add(props, 'Drawing Mode');
-        let element = drawingButton.domElement;
-        element.id = 'drawing-mode-button';
+        let drawingButton = guiMain.add(props, 'drawingMode').name("Drawing Mode");
+        let drawingButtonElement = drawingButton.domElement;
+        drawingButtonElement.id = 'drawing-mode-button';
 
         // --- Color manager interface ---
+
         guiColorManager = new dat.GUI({ name: "Color Manager" });
         let colorManagerFolder = guiColorManager.addFolder("Color Manager");
 
         // Checkboxes for colors
         colors.forEach(color => {
             colorManagerFolder.add(props, `${color} Visible`).name(`${color} Visible`).onChange(updateParticles);
-            
+        });
+        // Checkbox for nexus mode
+            let nexusButton = colorManagerFolder.add(props, `nexusMode`).name(`Nexus Mode`).onChange(updateParticles);
+            let nexusButtonElement = nexusButton.domElement;
+            nexusButtonElement.id = 'nexus-mode-button';
+        // Trails effect slider
+        colorManagerFolder.add(props, 'backgroundAlpha', 1, 100, 1).name("Trails").onChange((value) => {
+            backgroundAlpha = value;
+        });
+
+        colorManagerFolder.add(props, 'Scale', 0.1, 2, 0.1).name("Zoom").onChange(() => {
+            particles = [];
+            setupParticles();
         });
 
         // Open folders by default
         colorManagerFolder.open();
         particlesSettings.open();
         globalSettings.open();
-        
+
         setupParticles();
     }
 
     function draw() {
         // Drawing mode 
-        isBackground && background(0);
-
+        isBackground && background(0, backgroundAlpha);
+        
+        // Glow effect ?
+        // particles.forEach(p => {
+        //     const glowSize = 10 / props['Scale'];
+        //     drawingContext.shadowBlur = glowSize;
+        //     drawingContext.shadowColor = p.color;
+        // });
+    
         // Apply rules for interactions
         colors.forEach(color1 => {
             if (!props[`${color1} Visible`]) return; 
@@ -127,6 +154,21 @@
                     particles.filter(p => p.color === color2),
                     props[`${color1[0]} <--> ${color2[0]}`]
                 );
+
+                isNexus && (
+                    particles.filter(p => p.color === color1).forEach(a => {
+                        particles.filter(p => p.color === color2).forEach(b => {
+                            const dx = a.x - b.x;
+                            const dy = a.y - b.y;
+                            const d = sqrt(dx * dx + dy * dy);
+                            if (d > 0 && d < props['Max distance interaction']) {
+                                stroke(color1);
+                                line(a.x, a.y, b.x, b.y);
+                            }
+                        });
+                    })
+                )
+  
             });
         });
         particles.forEach(p => p.drawParticle());
