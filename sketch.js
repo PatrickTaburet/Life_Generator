@@ -65,7 +65,7 @@
         colors.forEach(color => {
             let colorSettings = particlesSettings.addFolder(color);
             colorSettings.open();
-            colorSettings.add(props, `${color} Particles`, 0, 300, 1).onChange(updateParticles);
+            colorSettings.add(props, `${color} Particles`, 1, 300, 1).onChange(updateParticles);
             
             // Color title
             const folderTitle = colorSettings.__ul.querySelector('.dg .title');

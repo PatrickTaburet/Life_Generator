@@ -1,6 +1,7 @@
 
 body{
-  background-color: rgb(22, 34, 32);
+  background: rgb(22,34,32);
+  background: linear-gradient(90deg, rgba(22,34,32,1) 0%, rgba(0,0,0,1) 47%, rgba(22,34,32,1) 100%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -21,46 +22,70 @@ h1{
   align-items: center;
 }
 canvas {
-  border: solid 5px #3815eb;
-  border-radius: 25px;
+  border: solid 3px #137c99;
+  box-shadow: 0 10px 30px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 35px;
 }
-.description{
-  padding: 15px;
+.description-card{
+  padding: 30px;
   position: absolute;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   flex-direction: column;
   left: 0;
   margin: 5vw;
-  background-color: #92e6dcd3;
+  background-color: #1a1a1aee;
   width: 20vw;
-  height: 70%;
-  border-radius: 15px;
-  border: solid 5px #3815eb;
-  color: #137c99;
-  font-size: 30px;
-  min-width: 230px;
+  border-radius: 25px;
+  /* border: solid 5px #3815eb; */
+  box-shadow: 0 10px 30px 5px rgba(0, 0, 0, 0.3);
+
+  min-width: 200px;
+}
+.description{
+  color: #dafaf4;
+  font-size: 18px;
+  margin-bottom: 3vw;
+  font-family:sans-serif;
 }
 .save-button{
-  background-color: #2FA1D6;
+  all: unset;
+  background-color: #303030;
   padding: 12px 20px 12px 20px;
   border-radius: 15px;
   cursor: pointer;
   transition: background-color 0.15s ease;
-  margin: 0 auto;
+  margin: 10px auto;
 }
 .save-button span{
   margin-bottom: 15px;
   color: #dafaf4;
   font-family: "Audiowide", serif;
-  font-size: 20px;
+  font-size: 16px;
 }
 .save-button:hover{
   background-color: #137c99;
 
 }
 .download-icon{
-  width: 20px;
+  width: 15px;
   margin-right: 5px;
+
+}
+.dna-image{
+  position: absolute;
+  bottom: 2vw;
+  left:-15vw;
+  width: 45vw;
+  z-index: -1;
+}
+.copyright{
+  color: #dafaf4;
+  font-family: sans-serif;
+  font-size: 13px;
+  position: absolute;
+  bottom: 5px;
+  cursor: pointer;
+  text-decoration: none;
 
 }
