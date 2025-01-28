@@ -8,9 +8,17 @@
         'Scale': 1,
         'Reset': resetProps,
         'Random': randomizeProps,
-        'Drawing Mode': () => isBackground = !isBackground,
+        'Drawing Mode': () => {
+            isBackground = !isBackground;
+            updateButtonColor();
+        },
     };
-
+    function updateButtonColor() {
+        const drawingModeButton = document.querySelector('#drawing-mode-button').parentElement;
+        if (drawingModeButton) {
+            drawingModeButton.querySelector('.property-name').style.color = !isBackground ? 'red' : 'white';
+        }
+    }
     colors.forEach(color => {
         props[`${color} Particles`] = 50;
         props[`${color} Visible`] = true; 
@@ -83,7 +91,9 @@
         });
         globalSettings.add(props, 'Reset');
         globalSettings.add(props, 'Random');
-        guiMain.add(props, 'Drawing Mode');
+        let drawingButton = guiMain.add(props, 'Drawing Mode');
+        let element = drawingButton.domElement;
+        element.id = 'drawing-mode-button';
 
         // --- Color manager interface ---
         guiColorManager = new dat.GUI({ name: "Color Manager" });
@@ -187,3 +197,17 @@
             ellipse(this.x, this.y, particleSize, particleSize);
         }
     }
+
+    // Save canva screenshot
+
+    document.querySelector('.save-button').addEventListener('click', saveCanvasImage);
+
+    function keyPressed() {
+        if (key === ' ') saveCanvasImage();
+    }
+    function saveCanvasImage() {
+        const userConfirmation = confirm("Do you want to save this image?");
+        if (userConfirmation) saveCanvas('myCanvas', 'png');
+    }
+
+
