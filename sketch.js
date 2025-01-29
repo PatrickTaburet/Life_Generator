@@ -17,17 +17,16 @@
             updateButton('#drawing-mode-button', !isBackground);
         },
         'nexusMode': () => {
+            console.log('nexus change');
+            
             isNexus = !isNexus;
             updateButton('#nexus-mode-button', isNexus);
+            updateSliderConstraints(); 
+            updateParticles();
         },
-        'backgroundAlpha' : 100,
+        'backgroundAlpha' : 150,
     };
-    function updateButton(buttonId, boolVariable, mainColor = 'red', secondColor = 'white' ) {
-        const drawingModeButton = document.querySelector(buttonId).parentElement;
-        if (drawingModeButton) {
-            drawingModeButton.querySelector('.property-name').style.color = boolVariable ? mainColor : secondColor;
-        }
-    }
+   
     colors.forEach(color => {
         props[`${color} Particles`] = 50;
         props[`${color} Visible`] = true; 
@@ -35,6 +34,13 @@
             props[`${color[0]} <--> ${otherColor[0]}`] = 0;
         })
     });
+
+    function updateButton(buttonId, boolVariable, mainColor = 'red', secondColor = 'white' ) {
+        const drawingModeButton = document.querySelector(buttonId).parentElement;
+        if (drawingModeButton) {
+            drawingModeButton.querySelector('.property-name').style.color = boolVariable ? mainColor : secondColor;
+        }
+    }
 
     function updateParticles() {
         particles = [];
@@ -54,20 +60,52 @@
         });
         props['Max distance interaction'] = 100;
         props['Scale'] = 1;
-        props['backgroundAlpha'] = 100;
+        props['backgroundAlpha'] = 150;
+        isNexus = false;
+        updateButton('#nexus-mode-button', isNexus);
+        updateSliderConstraints(); 
+        isBackground = true;
+        updateButton('#drawing-mode-button', !isBackground);
         updateParticles();
     }
 
     function randomizeProps(){
         colors.forEach(color => {
-            props[`${color} Particles`] = Math.floor(Math.random() * 300);
+            props[`${color} Particles`] = Math.floor(Math.random() * (isNexus ? 150 : 300));
             colors.forEach(otherColor => {
                 props[`${color[0]} <--> ${otherColor[0]}`] = (Math.random() * 10) - 5;
             })
         });
-        props['Max distance interaction'] = Math.floor(Math.random() * 200);
+        props['Max distance interaction'] = Math.floor(Math.random() * (isNexus ? 130 : 200));
         updateParticles();
     }
+
+    function updateSliderConstraints() {
+        colors.forEach(color => {
+            const colorParticleController = guiMain.__folders["Particles Settings"].__folders[color].__controllers[0];
+            if (isNexus && props[`${color} Particles`] > 150) {
+                props[`${color} Particles`] = 150;
+            } 
+            if (colorParticleController) {
+                colorParticleController.max(isNexus ? 150 : 300);
+                colorParticleController.updateDisplay();
+                console.log("3");
+            }
+        });
+        console.log("5");
+        const maxDistanceController = guiMain.__folders["Global Settings"].__controllers.find(ctrl => ctrl.property === 'Max distance interaction');
+        if (maxDistanceController) {
+            if (isNexus && props['Max distance interaction'] > 100) {
+                props['Max distance interaction'] = 100;
+            } 
+            maxDistanceController.max(isNexus ? 130 : 200);
+            maxDistanceController.updateDisplay();
+            console.log("6");
+        }
+    }
+
+    
+    // ---- p5 SETUP ----
 
     function setup() {
         const canvas = createCanvas(700, 700);
@@ -94,10 +132,26 @@
         });
 
         // Global settings
+
         globalSettings.add(props, 'Max distance interaction', 0, 200, 1);
- 
+        // Trails effect slider
+        globalSettings.add(props, 'backgroundAlpha', 1, 150, 1).name("Trails").onChange((value) => {
+            backgroundAlpha = value;
+        });
+        // Zoom effect slider
+        globalSettings.add(props, 'Scale', 0.1, 2, 0.1).name("Zoom").onChange(() => {
+            particles = [];
+            setupParticles();
+        });
         globalSettings.add(props, 'Reset');
         globalSettings.add(props, 'Random');
+
+        // Nexus mode button
+        let nexusButton = guiMain.add(props, `nexusMode`).name(`Nexus Mode`).onChange(updateParticles);
+        let nexusButtonElement = nexusButton.domElement;
+        nexusButtonElement.id = 'nexus-mode-button';
+
+        // Drawing mode button
         let drawingButton = guiMain.add(props, 'drawingMode').name("Drawing Mode");
         let drawingButtonElement = drawingButton.domElement;
         drawingButtonElement.id = 'drawing-mode-button';
@@ -111,19 +165,7 @@
         colors.forEach(color => {
             colorManagerFolder.add(props, `${color} Visible`).name(`${color} Visible`).onChange(updateParticles);
         });
-        // Checkbox for nexus mode
-            let nexusButton = colorManagerFolder.add(props, `nexusMode`).name(`Nexus Mode`).onChange(updateParticles);
-            let nexusButtonElement = nexusButton.domElement;
-            nexusButtonElement.id = 'nexus-mode-button';
-        // Trails effect slider
-        colorManagerFolder.add(props, 'backgroundAlpha', 1, 100, 1).name("Trails").onChange((value) => {
-            backgroundAlpha = value;
-        });
-
-        colorManagerFolder.add(props, 'Scale', 0.1, 2, 0.1).name("Zoom").onChange(() => {
-            particles = [];
-            setupParticles();
-        });
+       
 
         // Open folders by default
         colorManagerFolder.open();
