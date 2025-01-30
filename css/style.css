@@ -89,3 +89,24 @@ canvas {
   text-decoration: none;
 
 }
+
+/* How to use  */
+#how-to-use{
+  cursor: pointer;
+  width: 130px;
+  color: #21bbe6 ;
+}
+#how-to-use:hover{
+  color: #dafaf4;
+}
+
+/* Modale pagination */
+
+.shepherd-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.shepherd-pagination {
+  margin-right: auto;
+}

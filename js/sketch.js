@@ -1,8 +1,10 @@
+
 let particles = [];
-let guiMain, guiColorManager, colorListFolder, backgroundAlpha; 
+let guiMain, guiColorManager, backgroundAlpha, colorManagerFolder, particlesSettings, globalSettings, colorSettings; 
 let isBackground = true;
 let isNexus = false;
 let isMousePressed = false;
+let colorFolders = {};
 
 //////////////  dat.GUI interface settings //////////////
 
@@ -111,19 +113,23 @@ function setup() {
 
     // --- Main interface ---
     guiMain = new dat.GUI();
-    let particlesSettings = guiMain.addFolder("Particles Settings");
-    let globalSettings = guiMain.addFolder("Global Settings");
+    particlesSettings = guiMain.addFolder("Particles Settings");
+    let particlesSettingsElement = particlesSettings.domElement;
+    particlesSettingsElement.classList.add('step3');
+    globalSettings = guiMain.addFolder("Global Settings");
+    let globalSettingsElement = globalSettings.domElement;
+    globalSettingsElement.classList.add('step4');
 
     colors.forEach(color => {
-        let colorSettings = particlesSettings.addFolder(color);
-        colorSettings.open();
-        colorSettings.add(props, `${color} Particles`, 1, 300, 1).onChange(updateParticles);
+        colorFolders[color]  = particlesSettings.addFolder(color);
+        colorFolders[color].open();
+        colorFolders[color].add(props, `${color} Particles`, 1, 300, 1).onChange(updateParticles);
         
         // Color title
-        const folderTitle = colorSettings.__ul.querySelector('.dg .title');
+        const folderTitle = colorFolders[color].__ul.querySelector('.dg .title');
         if (folderTitle) folderTitle.style.color = color;
         colors.forEach(otherColor => {
-            colorSettings.add(props, `${color[0]} <--> ${otherColor[0]}`, -5, 5, 0.05);
+            colorFolders[color].add(props, `${color[0]} <--> ${otherColor[0]}`, -5, 5, 0.05);
         })
     });
 
@@ -155,7 +161,9 @@ function setup() {
     // --- Color manager interface ---
 
     guiColorManager = new dat.GUI({ name: "Color Manager" });
-    let colorManagerFolder = guiColorManager.addFolder("Color Manager");
+    colorManagerFolder = guiColorManager.addFolder("Color Manager");
+    let colorManagerElement = colorManagerFolder.domElement;
+    colorManagerElement.id = 'color-manager';
 
     // Checkboxes for colors
     colors.forEach(color => {
@@ -274,7 +282,7 @@ class Particle {
     drawParticle() {
         fill(this.color);
         noStroke();
-        const particleSize = 3 / props['Scale']; 
+        const particleSize = 4 / props['Scale']; 
         ellipse(this.x, this.y, particleSize, particleSize);
     }
 }
@@ -316,7 +324,19 @@ function keyPressed() {
 }
 function saveCanvasImage() {
     const userConfirmation = confirm("Do you want to save this image?");
-    if (userConfirmation) saveCanvas('myCanvas', 'png');
+    if (userConfirmation) saveCanvas('myArtwork', 'png');
 }
 
+// How to use tutorial : open all GUI folders when tutorial start
 
+document.getElementById("how-to-use").addEventListener("click", () => {
+    guiMain.open();
+    guiColorManager.open();
+    colorManagerFolder.open();
+    particlesSettings.open();
+    globalSettings.open();
+    colors.forEach(color => {
+        colorFolders[color].open();
+    });
+
+});
