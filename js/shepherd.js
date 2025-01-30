@@ -1,5 +1,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
+    window.isTourActive = false;
+
     const tour = new Shepherd.Tour({
         useModalOverlay: true,
         defaultStepOptions: {
@@ -17,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
-    
+
     // Pagination
 
     function createPagination(step) {
@@ -26,11 +28,25 @@ document.addEventListener("DOMContentLoaded", () => {
         return `<div class="shepherd-pagination">${currentStep} / ${totalSteps}</div>`;
     }
 
+    // Keyboard navigation
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            tour.cancel();
+        } else if (event.key === ' ' || event.key === 'Enter') {
+            if (tour.isActive()) {
+                event.preventDefault();  
+                event.stopPropagation();
+                tour.next();
+            }
+        }
+    });
+
     // Steps
 
     tour.addStep({
         id: 'step-one',
-        text: "This is your canvas – your laboratory! <br> Here, you can observe the particles moving, evolving, and interacting with each other. <br> Click anywhere on the canvas to interact with the particles!",
+        text: "<span class='warning'>This is your canvas – your laboratory !</span> <br> <br> Here, you can observe the particles moving, evolving, and interacting with each other. <br> Click anywhere on the canvas to interact with the particles !",
         attachTo: { element: '.p5Canvas', on: 'top' },
         buttons: [
             {
@@ -42,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     tour.addStep({
         id: 'step-two',
-        text: "Click this button to save and download your canvas to your computer once you're satisfied with the result!",
+        text: "Click this button to <span class='warning'>save</span> and <span class='warning'>download</span> your canvas to your computer once you're satisfied with the result ! <br> You can also press <span class='warning'>Spacebar</span> to quickly save your image.",
         attachTo: { element: '.step2', on: 'bottom' },
         buttons: [
             {
@@ -53,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     tour.addStep({
         id: 'step-three',
-        text: "This is your main control panel. For each color's particles, you can increase their quantity and adjust how they interact with other colors (attraction or repulsion).",
+        text: "<span class='warning'>This is your main control panel.</span> <br> <br>For each color's particles, you can increase their quantity and adjust how they interact with other colors (attraction or repulsion).",
         attachTo: { element: '.step3', on: 'left' },
         buttons: [
             {
@@ -64,8 +80,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     tour.addStep({
         id: 'step-four',
-        text: "In the global settings, you can: <br><br> • Adjust the maximum distance at which particles interact with each other. <br> • Add a persistent trail effect for a dynamic visual experience. <br> • Zoom in or out to explore new patterns or closely observe interactions. <br> • Use the 'Reset' button to return to the default settings. <br> • The 'Random' button, a fun way to discover unexpected results, lets you experiment with random settings!",
-        attachTo: { element: '.step4', on: 'left' },
+        text: "<span class='warning'>In the global settings, you can: </span> <br><br> • Adjust the maximum distance at which particles interact with each other. <br><br> • Add a persistent trail effect for a dynamic visual experience. <br><br> • Zoom in or out to explore new patterns or closely observe interactions. <br><br> • Use the <span class='warning'>Reset</span> button to return to the default settings. <br><br> • The <span class='warning'>Random</span> button, a fun way to discover unexpected results, lets you experiment with random settings !",
+        attachTo: { element: '.step4', on: 'top' },
         buttons: [
             {
                 text: 'Next',
@@ -75,8 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     tour.addStep({
         id: 'step-five',
-        text: "The Nexus and Drawing Mode buttons offer a more artistic way to observe particle interactions. <br> Be careful, though—these modes may require significant computing power if many particles are present on the screen, so use them sparingly. <br><br> •  Nexus Mode visually represents the interactions between particles by creating a link between any two particles experiencing a force, resulting in stunning effects! <br> • Drawing Mode leaves a trail of all previous particle positions on the screen, turning these traces into a true masterpiece. <br><br> Transform your laboratory into a unique, evolving piece of art!",
-        attachTo: { element: '#nexus-mode-button', on: 'left' },
+        text: "The Nexus and Drawing Mode buttons offer a more artistic way to observe particle interactions. <br><br> <span class='warning'>Be careful, though — these modes may require significant computing power if many particles are present on the screen, so use them sparingly.</span> <br><br> • <span class='warning'>Nexus Mode</span> visually represents the interactions between particles by creating a link between any two particles experiencing a force, resulting in stunning effects ! <br><br> • <span class='warning'> Drawing Mode </span> leaves a trail of all previous particle positions on the screen, turning these traces into a true masterpiece. <br><br> Transform your laboratory into a unique, evolving piece of art !",
+        attachTo: { element: '.nexus-mode', on: 'left' },
         buttons: [
             {
                 text: 'Next',
@@ -86,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     tour.addStep({
         id: 'step-six',
-        text:"Finally, this panel allows you to mask one or more particle colors on the screen. Experiment with the checkboxes, and you'll see the difference—it can be quite surprising!",
+        text:"Finally, the <span class='warning'>Color Manager</span> allows you to mask one or more particle colors on the screen. <br> Experiment with the checkboxes, and you'll see the difference — it can be quite surprising !",
         attachTo: { element: '#color-manager', on: 'left' },
         buttons: [
             {
@@ -97,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     tour.addStep({
         id: 'step-seven',
-        text:"That's it! Now you know all about the Life Simulator. Let's experiment and watch these molecules come to life! :)",
+        text:"That's it ! Now you know all about the Life Simulator.<br> Let's experiment and watch these molecules come to life ! :)",
         cancelIcon: {
             enabled: false
         },
@@ -111,5 +127,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("how-to-use").addEventListener("click", () => {
         tour.start();
+        window.isTourActive = true;
+    });
+    tour.on('complete', () => {
+        window.isTourActive = false;
+    });
+    
+    tour.on('cancel', () => {
+        window.isTourActive = false;
     });
 });

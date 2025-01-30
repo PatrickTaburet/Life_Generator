@@ -1,3 +1,14 @@
+html {
+  box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+}
+*{
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
 
 body{
   background: rgb(22,34,32);
@@ -6,13 +17,14 @@ body{
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  
 }
 
 h1{
   font-size: 50px;
   display: flex;
   justify-content: center;
-  margin: 45px;
+  margin: 0 45px 55px 45px;
   font-family: "Audiowide", serif;
   color: #dafaf4;
 }
@@ -40,12 +52,15 @@ canvas {
   /* border: solid 5px #3815eb; */
   box-shadow: 0 10px 30px 5px rgba(0, 0, 0, 0.3);
 
-  min-width: 200px;
+  min-width: 290px;
+}
+.description-card p{
+  margin-bottom: 1em;
 }
 .description{
   color: #dafaf4;
   font-size: 18px;
-  margin-bottom: 3vw;
+  margin-bottom: 2vw;
   font-family:sans-serif;
 }
 .save-button{
@@ -95,18 +110,74 @@ canvas {
   cursor: pointer;
   width: 130px;
   color: #21bbe6 ;
+  margin: 2em 0 2em 0;
 }
 #how-to-use:hover{
   color: #dafaf4;
 }
 
 /* Modale pagination */
+/* .shepherd-theme-arrows{
+  background-color: #dafaf4!important;
+  border-radius: 15px!important;
+  border: solid 5px #137c99;
+} */
+.shepherd-theme-arrows{
+  font-family:sans-serif!important;
+  color: #dafaf4!important;
+  border-radius: 15px!important;
+  padding: 2px!important;
 
+}
+.shepherd-content{
+  padding: .75rem!important;
+  border-radius: 15px!important;
+
+}
+.shepherd-arrow::before, .shepherd-content{
+  background-color: #414f60!important;
+  /* border: solid 5px #21bbe6; */
+}
+.shepherd-arrow::before{
+  border: solid 2px #dafaf4; 
+
+}
+.shepherd-cancel-icon{
+  color: #dafaf4!important;
+}
+.shepherd-cancel-icon:hover{
+  color: #21bbe6!important;
+}
+.shepherd-header{
+  padding: 0 .75rem 0!important;
+  height: 20px;
+}
+.shepherd-text{
+  padding: .5em .75em 1.5em .75em!important;
+  color: #dafaf4!important;
+}
 .shepherd-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 .75rem!important;
 }
 .shepherd-pagination {
   margin-right: auto;
+}
+.shepherd-button {
+  background-color: #137c99!important;
+  color: #dafaf4!important;
+  font-size: 16px;
+  font-weight: 500;
+}
+.shepherd-button:hover {
+  background-color: #21bbe6!important;
+  color: #162220!important;
+}
+.shepherd-arrow{
+  
+}
+.warning{
+  color: #80fbdf;
 }

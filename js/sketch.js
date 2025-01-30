@@ -152,6 +152,8 @@ function setup() {
     let nexusButton = guiMain.add(props, `nexusMode`).name(`Nexus Mode`).onChange(updateParticles);
     let nexusButtonElement = nexusButton.domElement;
     nexusButtonElement.id = 'nexus-mode-button';
+    let nexusButtonClass = nexusButton.domElement.parentElement.parentElement;;
+    nexusButtonClass.classList.add('nexus-mode');
 
     // Drawing mode button
     let drawingButton = guiMain.add(props, 'drawingMode').name("Drawing Mode");
@@ -320,7 +322,9 @@ function applyRepulsion() {
 document.querySelector('.save-button').addEventListener('click', saveCanvasImage);
 
 function keyPressed() {
-    if (key === ' ') saveCanvasImage();
+    if (key === ' ' && !window.isTourActive) {
+        saveCanvasImage();
+    }
 }
 function saveCanvasImage() {
     const userConfirmation = confirm("Do you want to save this image?");
