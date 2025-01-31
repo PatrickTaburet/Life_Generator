@@ -13,13 +13,16 @@ html, body {
 body{
   background: rgb(22,34,32);
   background: linear-gradient(90deg, rgba(22,34,32,1) 0%, rgba(0,0,0,1) 47%, rgba(22,34,32,1) 100%);
+
+  
+}
+main{
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  
+  height: 100%;
 }
-
 h1{
   font-size: 50px;
   display: flex;
@@ -39,13 +42,14 @@ canvas {
   border-radius: 35px;
 }
 .description-card{
+  top:0;
   padding: 30px;
   position: absolute;
   display: flex;
   justify-content: space-between;
   flex-direction: column;
   left: 0;
-  margin: 5vw;
+  margin: 5vw 5vw 5vw 3vw;
   background-color: #1a1a1aee;
   width: 20vw;
   border-radius: 25px;
@@ -102,6 +106,8 @@ canvas {
   bottom: 5px;
   cursor: pointer;
   text-decoration: none;
+  left: 50vw;
+  transform: translateX(-50%);
 
 }
 
@@ -113,8 +119,10 @@ canvas {
   margin: 2em 0 2em 0;
 }
 #how-to-use:hover{
+  filter: brightness(1.5);
   color: #dafaf4;
 }
+
 
 /* Modale pagination */
 /* .shepherd-theme-arrows{
@@ -181,3 +189,125 @@ canvas {
 .warning{
   color: #80fbdf;
 }
+
+
+/* 
+========================
+Media queries
+========================
+*/
+
+/* ----------------------------- Mobile < 480px ------------------------------ */
+@media (max-width: 480px) {
+  main{
+    justify-content: start;
+  }
+  h1{
+    margin-top: 5vh;
+    text-align: center;
+  }
+  .p5Canvas {
+    position: absolute; 
+    bottom: 0;  
+    left: 50%; 
+    transform: translateX(-50%); 
+    margin-bottom: 10px; 
+    z-index: -1;
+  }
+  .description-card{
+    top:5vh;
+    padding: 30px;
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    left: 0;
+    margin: 5vw 5vw 5vw 3vw;
+    background-color: #1a1a1aee;
+    width: 20vw;
+    border-radius: 25px;
+    /* border: solid 5px #3815eb; */
+    box-shadow: 0 10px 30px 5px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    min-width: 290px;
+  }
+  .description-card p{
+    margin-bottom: 1em;
+  }
+  .description{
+    color: #dafaf4;
+    font-size: 12px;
+    margin-bottom: 2vw;
+    font-family:sans-serif;
+ 
+  }
+  /* GUI */
+
+  .gui-global-container{
+    margin: 0 20px 0 ;
+  }
+  .dg.main {
+    display: flex;
+    flex-direction: column;
+    height: 100vh!important;
+  }
+  .dg.main ul {
+    flex-grow: 1; /* Permet à la liste des contrôles de prendre tout l'espace */
+  }
+  .gui-main{
+      transform: scale(0.8);  
+      transform-origin: top right;
+      max-width: 210px;  
+      /* overflow: hidden; */
+      position: fixed !important;
+      top: 0px;
+      right: 0;
+      /* height: 100vh; */
+  }
+
+  .gui-main .property-name {
+      font-size: 12px; 
+  }
+  .gui-color{
+      transform: scale(0.8);  
+      transform-origin: top right;
+      max-width: 200px;  
+      top: 0px;
+      right: 170px; 
+      /* overflow: hidden; */
+      position: fixed !important;
+  }
+
+  .gui-color .property-name {
+      font-size: 12px; 
+  }
+  .dg.main .close-button {
+    font-size: 15px !important; 
+    padding: 5px !important;
+    height: 30px !important; 
+    width: 200px !important; 
+    margin-top: auto !important;
+  }
+}
+
+/* ----------------------------- Mobile (landscape) et Tablet < 767px ------------------------------ */
+
+@media (max-width: 767px) {
+  
+}
+/* ----------------------------- Tablet (portrait)  < 767px ------------------------------ */
+
+@media (min-width: 768px) and (max-width: 1024px) {
+
+}
+/* ----------------------------- Small desktop < 767px ------------------------------ */
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  
+}
+/* ----------------------------- Large desktop < 767px ------------------------------ */
+
+@media (min-width: 1601px) {
+}
+
+

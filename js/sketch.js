@@ -5,6 +5,7 @@ let isBackground = true;
 let isNexus = false;
 let isMousePressed = false;
 let colorFolders = {};
+let canvaSize ={};
 
 //////////////  dat.GUI interface settings //////////////
 
@@ -104,7 +105,11 @@ function updateSliderConstraints() {
 ////////////// p5 SETUP //////////////
 
 function setup() {
-    const canvas = createCanvas(1280, 720);
+    canvaSize = {x : (window.innerWidth  < 480 ? 350 : 1000), y : (window.innerWidth < 480 ? 600 : 720)};
+    console.log(canvaSize.x, canvaSize.y);
+    
+    const canvas = createCanvas(canvaSize.x, canvaSize.y);
+    // const canvas = createCanvas(1000, 720);
     canvas.parent("sketchContainer");
 
     // Initialize dat.GUI
@@ -112,7 +117,7 @@ function setup() {
     // --- Main interface ---
     
     guiMain = new dat.GUI();
-
+    guiMain.domElement.classList.add('gui-main');
     
     // Global settings
 
@@ -155,7 +160,7 @@ function setup() {
         props[`${color} Visible`] = true; 
         colorFolders[color]  = particlesSettings.addFolder(color);
         colorFolders[color].open();
-        colorFolders[color].add(props, `${color} Particles`, 1, 300, 1).onChange(updateParticles);
+        colorFolders[color].add(props, `${color} Particles`, 1, 300, 1).name('Particles').onChange(updateParticles);
         
         // Color title
         const folderTitle = colorFolders[color].__ul.querySelector('.dg .title');
@@ -166,27 +171,21 @@ function setup() {
 
             const slider = colorFolders[color].add(props, `${color[0]} <--> ${otherColor[0]}`, -5, 5, 0.05);
 
-            // Color interaction letters
-            // const sliderTitle = slider.domElement.querySelector('.property-name');
+            // Dynamic color letters for label interaction sliders
             const labelElement = slider.domElement.parentElement.querySelector('.property-name');
 
              if (labelElement) {
-                // Créer un HTML dynamique pour les lettres colorées
                 labelElement.innerHTML = `<span style="color:${color.toLowerCase()}">${color[0]}</span> <--> <span style="color:${otherColor.toLowerCase()}">${otherColor[0]}</span>`;
             }
 
         })
     });
 
-        // if (sliderNameElement) {
-        // // Créer un HTML dynamique pour les lettres colorées
-        // sliderNameElement.innerHTML = 
-        //     `<span style="color:${color.toLowerCase()}">${color[0]}</span> <--> <span style="color:${otherColor.toLowerCase()}">${otherColor[0]}</span>`;
-        // }
     // --- Drawing interface ---
 
     // Color manager 
     guiColorManager = new dat.GUI({ name: "Color Manager" });
+    guiColorManager.domElement.classList.add('gui-color');
     colorManagerFolder = guiColorManager.addFolder("Color Manager");
     let colorManagerElement = colorManagerFolder.domElement;
     colorManagerElement.id = 'color-manager';
@@ -327,8 +326,22 @@ class Particle {
         this.y += this.vy;
 
         // Keep particles within the canvas
-        if (this.x <= 0 || this.x >= width) this.vx *= -1;
-        if (this.y <= 0 || this.y >= height) this.vy *= -1;
+        if (this.x <= 0) {
+            this.x = 0;
+            this.vx *= -1;
+        }
+        if (this.x >= width) {
+            this.x = width;
+            this.vx *= -1;
+        }
+        if (this.y <= 0) {
+            this.y = 0;
+            this.vy *= -1;
+        }
+        if (this.y >= height) {
+            this.y = height;
+            this.vy *= -1;
+        }
     }
     drawParticle() {
         fill(this.color);
