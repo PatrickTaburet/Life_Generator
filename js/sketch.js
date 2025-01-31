@@ -11,6 +11,7 @@ let colorFolders = {};
 const colors = ["White", "Blue", "Green", "Red"]
 
 const props = {
+    'backgroundColor': [0, 0, 0],
     'Max distance interaction': 100,
     'Scale': 1,
     'Reset': resetProps,
@@ -26,10 +27,13 @@ const props = {
         updateParticles();
     },
     'backgroundAlpha' : 150,
+    'particleSize' : 4,
+    'timeScale': 1,
+    'FPS': 0,
 };
 
 colors.forEach(color => {
-    props[`${color} Particles`] = 50;
+    props[`${color} Particles`] = 100;
     props[`${color} Visible`] = true; 
     colors.forEach(otherColor => {
         props[`${color[0]} <--> ${otherColor[0]}`] = 0;
@@ -53,7 +57,7 @@ function updateParticles() {
 
 function resetProps() {
     colors.forEach(color => {
-        props[`${color} Particles`] = 50;
+        props[`${color} Particles`] = 100;
         props[`${color} Visible`] = true;
         colors.forEach(otherColor => {
             props[`${color[0]} <--> ${otherColor[0]}`] = 0;
@@ -83,7 +87,7 @@ function randomizeProps(){
 
 function updateSliderConstraints() {
     colors.forEach(color => {
-        const colorParticleController = guiMain.__folders["Particles Settings"].__folders[color].__controllers[0];
+        const colorParticleController = guiMain.__folders["Particles Rules"].__folders[color].__controllers[0];
         if (isNexus && props[`${color} Particles`] > 150) {
             props[`${color} Particles`] = 150;
         } 
@@ -106,19 +110,42 @@ function updateSliderConstraints() {
 ////////////// p5 SETUP //////////////
 
 function setup() {
-    const canvas = createCanvas(700, 700);
+    const canvas = createCanvas(1280, 720);
     canvas.parent("sketchContainer");
 
     // Initialize dat.GUI
 
     // --- Main interface ---
+    
     guiMain = new dat.GUI();
-    particlesSettings = guiMain.addFolder("Particles Settings");
-    let particlesSettingsElement = particlesSettings.domElement;
-    particlesSettingsElement.classList.add('step3');
+
+    
+    // Global settings
+
     globalSettings = guiMain.addFolder("Global Settings");
     let globalSettingsElement = globalSettings.domElement;
     globalSettingsElement.classList.add('step4');
+    globalSettings.add(props, 'Reset');
+    globalSettings.add(props, 'Random');
+
+    globalSettings.add(props, 'Max distance interaction', 0, 200, 1);
+ 
+    // Zoom effect slider
+    globalSettings.add(props, 'Scale', 0.1, 2, 0.1).name("Zoom").onChange(() => {
+        particles = [];
+        setupParticles();
+    });
+    // Time scale
+    globalSettings.add(props, 'timeScale', 0.1, 2, 0.1).name("Time Scale");
+    globalSettings.add(props, 'FPS').name("FPS").listen();
+
+
+
+    // Particles settings
+
+    particlesSettings = guiMain.addFolder("Particles Rules");
+    let particlesSettingsElement = particlesSettings.domElement;
+    particlesSettingsElement.classList.add('step3');
 
     colors.forEach(color => {
         colorFolders[color]  = particlesSettings.addFolder(color);
@@ -133,35 +160,10 @@ function setup() {
         })
     });
 
-    // Global settings
 
-    globalSettings.add(props, 'Max distance interaction', 0, 200, 1);
-    // Trails effect slider
-    globalSettings.add(props, 'backgroundAlpha', 1, 150, 1).name("Trails").onChange((value) => {
-        backgroundAlpha = value;
-    });
-    // Zoom effect slider
-    globalSettings.add(props, 'Scale', 0.1, 2, 0.1).name("Zoom").onChange(() => {
-        particles = [];
-        setupParticles();
-    });
-    globalSettings.add(props, 'Reset');
-    globalSettings.add(props, 'Random');
+    // --- Drawing interface ---
 
-    // Nexus mode button
-    let nexusButton = guiMain.add(props, `nexusMode`).name(`Nexus Mode`).onChange(updateParticles);
-    let nexusButtonElement = nexusButton.domElement;
-    nexusButtonElement.id = 'nexus-mode-button';
-    let nexusButtonClass = nexusButton.domElement.parentElement.parentElement;;
-    nexusButtonClass.classList.add('nexus-mode');
-
-    // Drawing mode button
-    let drawingButton = guiMain.add(props, 'drawingMode').name("Drawing Mode");
-    let drawingButtonElement = drawingButton.domElement;
-    drawingButtonElement.id = 'drawing-mode-button';
-
-    // --- Color manager interface ---
-
+    // Color manager 
     guiColorManager = new dat.GUI({ name: "Color Manager" });
     colorManagerFolder = guiColorManager.addFolder("Color Manager");
     let colorManagerElement = colorManagerFolder.domElement;
@@ -172,11 +174,36 @@ function setup() {
         colorManagerFolder.add(props, `${color} Visible`).name(`${color} Visible`).onChange(updateParticles);
     });
     
+    // Drawing settings
+
+    drawingFolder = guiColorManager.addFolder("Drawing");
+
+    // Trails effect slider
+    drawingFolder.add(props, 'backgroundAlpha', 1, 150, 1).name("Trails").onChange((value) => {
+        backgroundAlpha = value;
+    });
+    // Particles shape
+    drawingFolder.add(props, 'particleSize', 1, 20, 0.5).name("Particles Radius");
+    drawingFolder.addColor(props, 'backgroundColor').name("Background Color").onChange(() => {
+        background(props.backgroundColor[0], props.backgroundColor[1], props.backgroundColor[2], props['backgroundAlpha']);
+    });
+    // Nexus mode button
+    let nexusButton = guiColorManager.add(props, `nexusMode`).name(`Nexus Mode`).onChange(updateParticles);
+    let nexusButtonElement = nexusButton.domElement;
+    nexusButtonElement.id = 'nexus-mode-button';
+    let nexusButtonClass = nexusButton.domElement.parentElement.parentElement;;
+    nexusButtonClass.classList.add('nexus-mode');
+
+    // Drawing mode button
+    let drawingButton = guiColorManager.add(props, 'drawingMode').name("Drawing Mode");
+    let drawingButtonElement = drawingButton.domElement;
+    drawingButtonElement.id = 'drawing-mode-button';
 
     // Open folders by default
     colorManagerFolder.open();
     particlesSettings.open();
     globalSettings.open();
+    drawingFolder.open();
 
     setupParticles();
 }
@@ -184,10 +211,13 @@ function setup() {
 ////////////// p5 DRAW //////////////
 
 function draw() {
+    if (frameCount % 2 === 0) {
+        props['FPS'] = Math.round(frameRate());
+    }
     if (isMousePressed) applyRepulsion();
 
     // Drawing mode 
-    isBackground && background(0, backgroundAlpha);
+    isBackground &&  background(props.backgroundColor[0], props.backgroundColor[1], props.backgroundColor[2], props['backgroundAlpha']);
     
     // Glow effect ?
     // particles.forEach(p => {
@@ -272,8 +302,8 @@ class Particle {
     
     update(fx, fy) {
         // Update velocity and position
-        this.vx = (this.vx + fx) * 0.5;
-        this.vy = (this.vy + fy) * 0.5;
+        this.vx = (this.vx + fx) * 0.5 * props['timeScale'];
+        this.vy = (this.vy + fy) * 0.5 * props['timeScale'];
         this.x += this.vx;
         this.y += this.vy;
 
@@ -284,7 +314,7 @@ class Particle {
     drawParticle() {
         fill(this.color);
         noStroke();
-        const particleSize = 4 / props['Scale']; 
+        const particleSize = props['particleSize'] / props['Scale']; 
         ellipse(this.x, this.y, particleSize, particleSize);
     }
 }
@@ -300,8 +330,8 @@ function mouseReleased() {
 }
 
 function applyRepulsion() {
-    const repulsionStrength = 2.5; 
-    const repulsionRadius = 80; 
+    const repulsionStrength = 3.5; 
+    const repulsionRadius = 100; 
 
     particles.forEach(p => {
         const dx = p.x - mouseX;
