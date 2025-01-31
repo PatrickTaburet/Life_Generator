@@ -8,7 +8,7 @@ let colorFolders = {};
 
 //////////////  dat.GUI interface settings //////////////
 
-const colors = ["White", "Blue", "Green", "Red"]
+const colors = ["Red", "Cyan", "Blue", "Orange"]
 
 const props = {
     'backgroundColor': [0, 0, 0],
@@ -18,11 +18,11 @@ const props = {
     'Random': randomizeProps,
     'drawingMode': () => {
         isBackground = !isBackground;
-        updateButton('#drawing-mode-button', !isBackground);
+        updateButtonColor('#drawing-mode-button', !isBackground);
     },
     'nexusMode': () => {            
         isNexus = !isNexus;
-        updateButton('#nexus-mode-button', isNexus);
+        updateButtonColor('#nexus-mode-button', isNexus);
         updateSliderConstraints(); 
         updateParticles();
     },
@@ -33,18 +33,10 @@ const props = {
     'mouseImpactCoef' : 1,
 };
 
-colors.forEach(color => {
-    props[`${color} Particles`] = 100;
-    props[`${color} Visible`] = true; 
-    colors.forEach(otherColor => {
-        props[`${color[0]} <--> ${otherColor[0]}`] = 0;
-    })
-});
-
-function updateButton(buttonId, boolVariable, mainColor = 'red', secondColor = 'white' ) {
-    const drawingModeButton = document.querySelector(buttonId).parentElement;
-    if (drawingModeButton) {
-        drawingModeButton.querySelector('.property-name').style.color = boolVariable ? mainColor : secondColor;
+function updateButtonColor(buttonId, boolVariable, mainColor = 'red', secondColor = '#21bbe6' ) {
+    const Button = document.querySelector(buttonId).parentElement;
+    if (Button) {
+        Button.querySelector('.property-name').style.color = boolVariable ? mainColor : secondColor;
     }
 }
 
@@ -68,10 +60,10 @@ function resetProps() {
     props['Scale'] = 1;
     props['backgroundAlpha'] = 150;
     isNexus = false;
-    updateButton('#nexus-mode-button', isNexus);
+    updateButtonColor('#nexus-mode-button', isNexus);
     updateSliderConstraints(); 
     isBackground = true;
-    updateButton('#drawing-mode-button', !isBackground);
+    updateButtonColor('#drawing-mode-button', !isBackground);
     updateParticles();
 }
 
@@ -86,6 +78,7 @@ function randomizeProps(){
     updateParticles();
 }
 
+// Constrain the particles number and max distance sliders when NexusMode is active to prevent excessive resource usage and ensure smoother performance
 function updateSliderConstraints() {
     colors.forEach(color => {
         const colorParticleController = guiMain.__folders["Particles Rules"].__folders[color].__controllers[0];
@@ -126,8 +119,16 @@ function setup() {
     globalSettings = guiMain.addFolder("Global Settings");
     let globalSettingsElement = globalSettings.domElement;
     globalSettingsElement.classList.add('step4');
-    globalSettings.add(props, 'Reset');
-    globalSettings.add(props, 'Random');
+
+    let resetButton = globalSettings.add(props, 'Reset');
+    let resetButtonElement = resetButton.domElement;
+    resetButtonElement.id = 'resetButton-element';
+    updateButtonColor('#resetButton-element', true, '#21bbe6');
+
+    let randomButton = globalSettings.add(props, 'Random');
+    let randomButtonElement = randomButton.domElement;
+    randomButtonElement.id = 'randomButton-element';
+    updateButtonColor('#randomButton-element', true, '#21bbe6');
 
     globalSettings.add(props, 'Max distance interaction', 0, 200, 1);
  
@@ -150,6 +151,8 @@ function setup() {
     particlesSettingsElement.classList.add('step3');
 
     colors.forEach(color => {
+        props[`${color} Particles`] = 100;
+        props[`${color} Visible`] = true; 
         colorFolders[color]  = particlesSettings.addFolder(color);
         colorFolders[color].open();
         colorFolders[color].add(props, `${color} Particles`, 1, 300, 1).onChange(updateParticles);
@@ -157,12 +160,29 @@ function setup() {
         // Color title
         const folderTitle = colorFolders[color].__ul.querySelector('.dg .title');
         if (folderTitle) folderTitle.style.color = color;
+
         colors.forEach(otherColor => {
-            colorFolders[color].add(props, `${color[0]} <--> ${otherColor[0]}`, -5, 5, 0.05);
+            props[`${color[0]} <--> ${otherColor[0]}`] = 0;
+
+            const slider = colorFolders[color].add(props, `${color[0]} <--> ${otherColor[0]}`, -5, 5, 0.05);
+
+            // Color interaction letters
+            // const sliderTitle = slider.domElement.querySelector('.property-name');
+            const labelElement = slider.domElement.parentElement.querySelector('.property-name');
+
+             if (labelElement) {
+                // Créer un HTML dynamique pour les lettres colorées
+                labelElement.innerHTML = `<span style="color:${color.toLowerCase()}">${color[0]}</span> <--> <span style="color:${otherColor.toLowerCase()}">${otherColor[0]}</span>`;
+            }
+
         })
     });
 
-
+        // if (sliderNameElement) {
+        // // Créer un HTML dynamique pour les lettres colorées
+        // sliderNameElement.innerHTML = 
+        //     `<span style="color:${color.toLowerCase()}">${color[0]}</span> <--> <span style="color:${otherColor.toLowerCase()}">${otherColor[0]}</span>`;
+        // }
     // --- Drawing interface ---
 
     // Color manager 
@@ -197,11 +217,13 @@ function setup() {
     nexusButtonElement.id = 'nexus-mode-button';
     let nexusButtonClass = nexusButton.domElement.parentElement.parentElement;;
     nexusButtonClass.classList.add('nexus-mode');
+    updateButtonColor('#nexus-mode-button', true, '#21bbe6');
 
     // Drawing mode button
     let drawingButton = guiColorManager.add(props, 'drawingMode').name("Drawing Mode");
     let drawingButtonElement = drawingButton.domElement;
     drawingButtonElement.id = 'drawing-mode-button';
+    updateButtonColor('#drawing-mode-button', true, '#21bbe6');
 
     // Open folders by default
     colorManagerFolder.open();
