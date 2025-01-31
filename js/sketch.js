@@ -30,6 +30,7 @@ const props = {
     'particleSize' : 4,
     'timeScale': 1,
     'FPS': 0,
+    'mouseImpactCoef' : 1,
 };
 
 colors.forEach(color => {
@@ -137,6 +138,7 @@ function setup() {
     });
     // Time scale
     globalSettings.add(props, 'timeScale', 0.1, 2, 0.1).name("Time Scale");
+    globalSettings.add(props, 'mouseImpactCoef', 0.1, 4, 0.1).name("Click Impact");
     globalSettings.add(props, 'FPS').name("FPS").listen();
 
 
@@ -177,6 +179,8 @@ function setup() {
     // Drawing settings
 
     drawingFolder = guiColorManager.addFolder("Drawing");
+    let drawingFolderElement = drawingFolder.domElement;
+    drawingFolderElement.id = 'drawing-folder';
 
     // Trails effect slider
     drawingFolder.add(props, 'backgroundAlpha', 1, 150, 1).name("Trails").onChange((value) => {
@@ -218,13 +222,6 @@ function draw() {
 
     // Drawing mode 
     isBackground &&  background(props.backgroundColor[0], props.backgroundColor[1], props.backgroundColor[2], props['backgroundAlpha']);
-    
-    // Glow effect ?
-    // particles.forEach(p => {
-    //     const glowSize = 10 / props['Scale'];
-    //     drawingContext.shadowBlur = glowSize;
-    //     drawingContext.shadowColor = p.color;
-    // });
 
     // Apply rules for interactions
     colors.forEach(color1 => {
@@ -317,6 +314,24 @@ class Particle {
         const particleSize = props['particleSize'] / props['Scale']; 
         ellipse(this.x, this.y, particleSize, particleSize);
     }
+
+    // Halo effect : pretty but too resource-intensive.
+
+    // drawParticle() {
+    //     noStroke();
+        
+    //     const particleSize = props['particleSize'] / props['Scale'];
+        
+    //     // Draw multiple cercles to make the "halo" effect
+    //     for (let i = 7; i > 0; i--) {
+    //         fill(red(this.color), green(this.color), blue(this.color), i * (props["particleSize"] *0.1)); // Opacity gradient
+    //         ellipse(this.x, this.y, particleSize + i * 7, particleSize + i * 7);
+    //     }
+        
+    //     // Particule principale
+    //     fill(this.color);
+    //     ellipse(this.x, this.y, particleSize, particleSize);
+    // }
 }
 
 // Mouse pressed repulsive impact
@@ -330,8 +345,9 @@ function mouseReleased() {
 }
 
 function applyRepulsion() {
-    const repulsionStrength = 3.5; 
-    const repulsionRadius = 100; 
+    let f = props["mouseImpactCoef"];
+    const repulsionStrength = 3.5 * f; 
+    const repulsionRadius = 100 * f; 
 
     particles.forEach(p => {
         const dx = p.x - mouseX;
@@ -369,6 +385,7 @@ document.getElementById("how-to-use").addEventListener("click", () => {
     colorManagerFolder.open();
     particlesSettings.open();
     globalSettings.open();
+    drawingFolder.open();
     colors.forEach(color => {
         colorFolders[color].open();
     });
