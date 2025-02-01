@@ -96,7 +96,7 @@ function updateSliderConstraints() {
         if (isNexus && props['Max distance interaction'] > 100) {
             props['Max distance interaction'] = 100;
         } 
-        maxDistanceController.max(isNexus ? 130 : 200);
+        maxDistanceController.max(isNexus ? 150 : 200);
         maxDistanceController.updateDisplay();
     }
 }
@@ -105,12 +105,13 @@ function updateSliderConstraints() {
 ////////////// p5 SETUP //////////////
 
 function setup() {
-    canvaSize = {x : (window.innerWidth  < 480 ? 350 : 1000), y : (window.innerWidth < 480 ? 600 : 720)};
+    canvaSize = {x : (window.innerWidth  < 480 ? ((window.innerWidth * 0.9)) : 1000), y : (window.innerWidth < 480 ?(window.innerHeight / 1.8) : 720)};
     console.log(canvaSize.x, canvaSize.y);
     
     const canvas = createCanvas(canvaSize.x, canvaSize.y);
     // const canvas = createCanvas(1000, 720);
     canvas.parent("sketchContainer");
+    handleViewportChange();
 
     // Initialize dat.GUI
 
@@ -225,10 +226,16 @@ function setup() {
     updateButtonColor('#drawing-mode-button', true, '#21bbe6');
 
     // Open folders by default
+
     colorManagerFolder.open();
     particlesSettings.open();
     globalSettings.open();
     drawingFolder.open();
+    if (window.innerWidth < 480) {
+        guiMain.close();
+        guiColorManager.close();
+    }
+
 
     setupParticles();
 }
@@ -426,3 +433,13 @@ document.getElementById("how-to-use").addEventListener("click", () => {
     });
 
 });
+
+// Description card position
+
+function handleViewportChange() {
+    // RESIZE
+    const checkbox = document.getElementById('cb1');
+    if (window.innerWidth > 480) {
+      checkbox.checked = true;
+    }
+}
