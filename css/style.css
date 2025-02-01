@@ -41,30 +41,114 @@ canvas {
   box-shadow: 0 10px 30px 5px rgba(0, 0, 0, 0.3);
   border-radius: 35px;
 }
+
+/* Accordeon card */
+
+/* Core styles/functionality */
+
+.tab {
+  position: relative;
+}
+.tab input {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+.tab__content {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.35s;
+}
+.tab input:checked ~ .tab__content {
+  max-height: 40rem;
+}
+
+/* Visual styles */
+.accordion {
+  color: var(--theme);
+  border: 2px solid;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.tab__label,
+.tab__close {
+  display: flex;
+  color: #21bbe6;
+  background: var(--theme);
+  cursor: pointer;
+  font-family: sans-serif ;
+}
+.tab__label {
+  justify-content: space-between;
+  padding: 1rem;
+  font-size: 18px;
+  line-height: 1.15;
+}
+.tab__label:hover {
+color: #dafaf4;
+}
+
+.tab__label::after {
+  content: "\276F";
+  width: 1em;
+  height: 1em;
+  text-align: center;
+  transform: rotate(90deg);
+  transition: all 0.35s;
+}
+.tab input:checked + .tab__label::after {
+  transform: rotate(270deg);
+}
+
+.tab__close {
+  justify-content: flex-end;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+}
+.accordion--radio {
+  --theme: var(--secondary);
+}
+.bottom-tab{
+  display: flex;
+  justify-content: center;
+}
+/* Arrow animation */
+.tab input:not(:checked) + .tab__label:hover::after {
+  animation: bounce .5s infinite;
+}
+@keyframes bounce {
+  25% {
+    transform: rotate(90deg) translate(.25rem);
+  }
+  75% {
+    transform: rotate(90deg) translate(-.25rem);
+  }
+}
+
 .description-card{
   top:0;
-  padding: 30px;
+  padding: 1.5vw ;
   position: absolute;
   display: flex;
   justify-content: space-between;
   flex-direction: column;
   left: 0;
-  margin: 5vw 5vw 5vw 3vw;
+  margin: 3vw 5vw 5vw 3vw;
   background-color: #1a1a1aee;
   width: 20vw;
   border-radius: 25px;
   /* border: solid 5px #3815eb; */
   box-shadow: 0 10px 30px 5px rgba(0, 0, 0, 0.3);
 
-  min-width: 290px;
+  min-width: 320px;
 }
 .description-card p{
   margin-bottom: 1em;
 }
 .description{
   color: #dafaf4;
-  font-size: 18px;
-  margin-bottom: 2vw;
+  font-size: 16px;
+  margin: 2vw 0;
   font-family:sans-serif;
 }
 .save-button{
@@ -74,7 +158,7 @@ canvas {
   border-radius: 15px;
   cursor: pointer;
   transition: background-color 0.15s ease;
-  margin: 10px auto;
+  margin-top: 1.5vw;
 }
 .save-button span{
   margin-bottom: 15px;
