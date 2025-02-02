@@ -1,6 +1,6 @@
 
 let particles = [];
-let guiMain, guiColorManager, backgroundAlpha, colorManagerFolder, particlesSettings, globalSettings, colorSettings; 
+let guiMain, guiColorManager, backgroundAlpha, colorManagerFolder, particlesSettings, globalSettings, colorSettings, guiContainer; 
 let isBackground = true;
 let isNexus = false;
 let isMousePressed = false;
@@ -100,13 +100,23 @@ function updateSliderConstraints() {
         maxDistanceController.updateDisplay();
     }
 }
+// Resize windows 
 
+function windowResized() {
+    canvaSize = {x : (window.innerWidth  < 480 ? ((window.innerWidth * 0.9)) : 1000), y : (window.innerWidth < 480 ?(window.innerHeight / 1.8) : 720)};
+    // console.log(canvaSize.x, canvaSize.y);
+    
+    const canvas = createCanvas(canvaSize.x, canvaSize.y);
+    canvas.parent("sketchContainer");
+    handleViewportChange();
+    updateParticles()
+  }
 
 ////////////// p5 SETUP //////////////
 
 function setup() {
     canvaSize = {x : (window.innerWidth  < 480 ? ((window.innerWidth * 0.9)) : 1000), y : (window.innerWidth < 480 ?(window.innerHeight / 1.8) : 720)};
-    console.log(canvaSize.x, canvaSize.y);
+    // console.log(canvaSize.x, canvaSize.y);
     
     const canvas = createCanvas(canvaSize.x, canvaSize.y);
     // const canvas = createCanvas(1000, 720);
@@ -186,6 +196,7 @@ function setup() {
 
     // Color manager 
     guiColorManager = new dat.GUI({ name: "Color Manager" });
+
     guiColorManager.domElement.classList.add('gui-color');
     colorManagerFolder = guiColorManager.addFolder("Color Manager");
     let colorManagerElement = colorManagerFolder.domElement;
@@ -225,6 +236,9 @@ function setup() {
     drawingButtonElement.id = 'drawing-mode-button';
     updateButtonColor('#drawing-mode-button', true, '#21bbe6');
 
+    // gui global container
+    guiContainer = document.querySelector(".dg.ac");
+
     // Open folders by default
 
     colorManagerFolder.open();
@@ -243,6 +257,10 @@ function setup() {
 ////////////// p5 DRAW //////////////
 
 function draw() {
+
+    //Manage z-index of the gui menu if open or closed
+    guiContainer.style.zIndex = guiColorManager.closed ? 1 : 3
+ 
     if (frameCount % 2 === 0) {
         props['FPS'] = Math.round(frameRate());
     }
@@ -381,11 +399,15 @@ class Particle {
 function mousePressed() {
     isMousePressed = true;
 }
-
 function mouseReleased() {
     isMousePressed = false;
 }
-
+function touchStarted() {
+    isMousePressed = true;
+}
+function touchEnded() {
+    isMousePressed = false;
+}
 function applyRepulsion() {
     let f = props["mouseImpactCoef"];
     const repulsionStrength = 3.5 * f; 
@@ -403,7 +425,7 @@ function applyRepulsion() {
         }
     });
 }
-    
+
 
 // Save canva screenshot
 

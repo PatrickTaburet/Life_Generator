@@ -294,11 +294,11 @@ Media queries
   }
   .p5Canvas {
     position: absolute; 
-    bottom: 0;  
+    bottom: 35px;  
     left: 50%; 
     transform: translateX(-50%); 
-    margin-bottom: 35px; 
-    z-index: -1;
+    /* margin-bottom: 35px;  */
+    z-index: 0;
   }
   .description-card{
     top:12vh;
@@ -314,7 +314,7 @@ Media queries
     border-radius: 25px;
     /* border: solid 5px #3815eb; */
     box-shadow: 0 10px 30px 5px rgba(0, 0, 0, 0.3);
-    z-index: 1;
+    z-index: 2;
     min-width: 50vw;
   }
   .description-card p{
@@ -340,14 +340,17 @@ Media queries
     font-size: 10px;
   }
   /* GUI */
-
-  .gui-global-container{
-    margin: 0 20px 0 ;
+  
+  .dg.ac {
+    /* z-index: 3 !important; */
   }
+
   .dg.main {
     display: flex;
     flex-direction: column;
     height: 100vh!important;
+    position: fixed !important;  
+     
   }
   .dg.main ul {
     flex-grow: 1;
@@ -356,31 +359,35 @@ Media queries
     margin-top: 30px;
   }
   .gui-main{
-      transform: scale(0.8);  
-      transform-origin: top right;
-      max-width: 210px;  
-      /* overflow: hidden; */
-      position: fixed !important;
-      top: 0px;
-      right: 0;
-      /* height: 100vh; */
+    transform: scale(0.8);  
+    transform-origin: top right;
+    max-width: 210px;  
+    /* overflow: hidden; */
+    top: 0px;
+    right: 0;
+    /* height: 100vh; */
   }
 
   .gui-main .property-name {
-      font-size: 12px; 
+    font-size: 12px; 
   }
   .gui-color{
-      transform: scale(0.8);  
-      transform-origin: top right;
-      max-width: 200px;  
-      top: 0px;
-      right: 180px; 
-      /* overflow: hidden; */
-      position: fixed !important;
-  }
+    transform: scale(0.8);  
+    transform-origin: top right;
+    max-width: 200px;  
+    top: 0px;
+    right: 180px; 
+    /* overflow: hidden; */
 
+   
+  }
+  .gui-color{
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
   .gui-color .property-name {
-      font-size: 12px; 
+    font-size: 12px; 
   }
   .dg.main .close-button {
     font-size: 15px !important; 
