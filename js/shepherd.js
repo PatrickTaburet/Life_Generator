@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let isMobile = window.innerWidth < 480;
     let checkbox = document.getElementById('cb1');
-    console.log(isMobile);
     
     const tour = new Shepherd.Tour({
         useModalOverlay: true,
@@ -17,8 +16,10 @@ document.addEventListener("DOMContentLoaded", () => {
             when: {
                 show: function() {
                     const footer = this.el.querySelector('.shepherd-footer');
-                    const pagination = createPagination(this);
-                    footer.insertAdjacentHTML('afterbegin', pagination);
+                    if (footer) {
+                        const pagination = createPagination(this);
+                        footer.insertAdjacentHTML('afterbegin', pagination);
+                    }
                 }
             }
         }
@@ -63,7 +64,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (checkbox && isMobile) {
                     checkbox.checked = false;
                 }
-   
+                const footer = this.el.querySelector('.shepherd-footer');
+                if (footer) {
+                    const pagination = createPagination(this);
+                    footer.insertAdjacentHTML('afterbegin', pagination);
+                }
             }
         }
     });
@@ -96,7 +101,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (checkbox && isMobile) {
                     checkbox.checked = false;
                 }
-   
+                const footer = this.el.querySelector('.shepherd-footer');
+                if (footer) {
+                    const pagination = createPagination(this);
+                    footer.insertAdjacentHTML('afterbegin', pagination);
+                }   
             }
         }
     });

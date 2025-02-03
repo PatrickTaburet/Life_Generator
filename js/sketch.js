@@ -112,23 +112,18 @@ function updateSliderConstraints() {
 // Resize windows 
 
 function windowResized() {
-    canvaSize = {x : (window.innerWidth  < 480 ? ((window.innerWidth * 0.9)) : 1000), y : (window.innerWidth < 480 ?(window.innerHeight / 1.8) : 720)};
-    // console.log(canvaSize.x, canvaSize.y);
-    
-    const canvas = createCanvas(canvaSize.x, canvaSize.y);
+    canvaSize = {width : (isMobile ? (window.innerWidth * 0.9) : (window.innerWidth * 0.6)), height : (isMobile ?(window.innerHeight / 1.8) : (window.innerHeight * 0.78))};    
+    const canvas = createCanvas(canvaSize.width, canvaSize.height);
     canvas.parent("sketchContainer");
     handleViewportChange();
     updateParticles()
-  }
+}
 
 ////////////// p5 SETUP //////////////
 
 function setup() {
-  
-    canvaSize = {x : (isMobile ? ((window.innerWidth * 0.9)) : 1000), y : (isMobile ?(window.innerHeight / 1.8) : 720)};
-    // console.log(canvaSize.x, canvaSize.y);
-    
-    const canvas = createCanvas(canvaSize.x, canvaSize.y);
+    canvaSize = {width : (isMobile ? (window.innerWidth * 0.9) : (window.innerWidth * 0.6)), height : (isMobile ? (window.innerHeight / 1.8) : (window.innerHeight * 0.78))};    
+    const canvas = createCanvas(canvaSize.width, canvaSize.height);
     // const canvas = createCanvas(1000, 720);
     canvas.parent("sketchContainer");
     checkbox = document.getElementById('cb1');
@@ -461,6 +456,8 @@ function saveCanvasImage() {
 
 // How to use tutorial : open all GUI folders when tutorial start
 
+!isMobile && document.querySelector('#how-to-use').addEventListener("click", openGuiFolers);
+
 function openGuiFolers(){
     guiMain.open();
     guiColorManager.open();
@@ -471,7 +468,7 @@ function openGuiFolers(){
     colors.forEach(color => {
         colorFolders[color].open();
     });
-    checkbox.checked = false;
+    checkbox.checked =  isMobile ? false : true;
 }
 
 // Description card position
