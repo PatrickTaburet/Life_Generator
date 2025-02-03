@@ -150,6 +150,10 @@ color: #dafaf4;
   margin: 2vw 0 1vw 0;
   font-family:sans-serif;
 }
+.description-bottom-line{
+  text-align: center;
+  margin-top: 3rem;
+}
 .save-button{
   all: unset;
   background-color: #303030;
@@ -168,6 +172,9 @@ color: #dafaf4;
 .save-button:hover{
   background-color: #137c99;
 
+}
+.save-button-mobile{
+  display: none;
 }
 .download-icon{
   width: 15px;
@@ -195,13 +202,16 @@ color: #dafaf4;
 }
 
 /* How to use  */
+
 #how-to-use{
   cursor: pointer;
   width: 100%;
   color: #21bbe6 ;
-  margin: 2em auto;
+  margin-top: 1em;
+  margin-bottom: 0;
   text-align: center;
   padding-right: 10px;
+  font-family: sans-serif;
 }
 #how-to-use:hover{
   filter: brightness(1.5);
@@ -209,7 +219,8 @@ color: #dafaf4;
 }
 
 
-/* Modale pagination */
+/* Tutorial Modales */
+
 /* .shepherd-theme-arrows{
   background-color: #dafaf4!important;
   border-radius: 15px!important;
@@ -303,38 +314,81 @@ Media queries
   .description-card{
     top:12vh;
     padding: 15px;
+    transform: translateX(-50%); 
     position: absolute;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    left: 0;
-    margin: 5vw 5vw 5vw 3vw;
+    left: 45vw;
+    margin: 5vw;
     background-color: #1a1a1aee;
-    width: 20vw;
+    /* width: 20vw; */
     border-radius: 25px;
     /* border: solid 5px #3815eb; */
     box-shadow: 0 10px 30px 5px rgba(0, 0, 0, 0.3);
     z-index: 2;
-    min-width: 50vw;
+    /* min-width: 50vw; */
   }
   .description-card p{
     margin-bottom: 1em;
   }
   .description{
     color: #dafaf4;
-    font-size: 12px;
+    font-size: 13px;
     margin-bottom: 2vw;
-    font-family:sans-serif;
+    margin-top: 2em;
+    font-family: sans-serif;
+  }
+  .description-bottom-line{
+    margin-top: 2rem;
+  }
+  
+  #how-to-use{
+    cursor: pointer;
+    width: 100%;
+    color: #21bbe6 ;
+    margin-top: 1em;
+    margin-bottom: 0.3em;
+    text-align: center;
+    padding-right: 10px;
+    font-family: sans-serif;
+    font-size: 15px;
   }
   .tab__label {
-    font-size: 14px;
+    font-size: 15px;
   }
   .save-button{
-    padding: 10px 18px 10px 18px;
-    margin-top: 15px;
+    display: none;
   }
-  .save-button span{
+ 
+  .save-button-mobile{
+    border: none;
+    outline: none; 
+    background: none; 
+    text-decoration: none; 
+    display: block;
+    bottom: 25px;
+    right: 5vw;
+    /* transform: translateX(-40%); */
+
+    position: fixed;
+    background-color: #137c99;
+    padding: 10px 18px 10px 18px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    margin-top: 20px;
+    z-index: 1000; 
+  }
+  .save-button-mobile span{
+    margin-bottom: 15px;
+    color: #dafaf4;
+    font-family: "Audiowide", serif;
     font-size: 14px;
+  }
+  .save-button-mobile:hover{
+    background-color: #303030;
+  
   }
   .copyright{
     font-size: 10px;
@@ -399,6 +453,63 @@ Media queries
   .dg.main .close-bottom{
     background-color: #137c99!important;
   }
+  
+/* Tutorial Modales */
+
+/* .shepherd-theme-arrows{
+  font-family:sans-serif!important;
+  color: #dafaf4!important;
+  border-radius: 15px!important;
+  padding: 2px!important;
+
+}
+.shepherd-content{
+  padding: .75rem!important;
+  border-radius: 15px!important;
+} */
+.shepherd-theme-arrows{
+  max-width: 80vw!important;
+
+}
+.shepherd-cancel-icon{
+  color: #dafaf4!important;
+  font-size: 30px!important;
+}
+.shepherd-header{
+  padding: 0 .45rem 0!important;
+  height: 15px;
+}
+.shepherd-text{
+  padding: .2em .45em 1.2em .35em!important;
+  font-size: 13px!important;
+  line-height : 1rem!important;
+}
+.shepherd-footer {
+  padding: 0 .45rem!important;
+}
+.shepherd-pagination {
+  margin-right: auto;
+  font-size: 13px!important;
+}
+.shepherd-button {
+  background-color: #137c99!important;
+  color: #dafaf4!important;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 0.4rem 0.5rem 0.3rem 0.5rem!important;
+}
+.shepherd-button:hover {
+  background-color: #21bbe6!important;
+  color: #162220!important;
+}
+.shepherd-arrow{
+  
+}
+.warning{
+  color: #80fbdf;
+}
+
+
 }
 
 /* ----------------------------- Mobile (landscape) et Tablet < 767px ------------------------------ */

@@ -7,7 +7,7 @@ let isMousePressed = false;
 let colorFolders = {};
 let canvaSize = {};
 let isMobile =  window.innerWidth < 480;
-
+let checkbox;
 //////////////  dat.GUI interface settings //////////////
 
 const colors = ["Red", "Cyan", "Blue", "Orange"]
@@ -131,7 +131,9 @@ function setup() {
     const canvas = createCanvas(canvaSize.x, canvaSize.y);
     // const canvas = createCanvas(1000, 720);
     canvas.parent("sketchContainer");
+    checkbox = document.getElementById('cb1');
     handleViewportChange();
+
 
     // Initialize dat.GUI
 
@@ -255,12 +257,16 @@ function setup() {
     particlesSettings.open();
     globalSettings.open();
     drawingFolder.open();
-    if (window.innerWidth < 480) {
+    // if (window.innerWidth < 480) {
+    //     guiMain.close();
+    //     guiColorManager.close();
+    // }
+    if(isMobile) {
         guiMain.close();
         guiColorManager.close();
-    }
-
-
+    }     
+    window.guiMain = guiMain;
+    window.guiColorManager = guiColorManager;
     setupParticles();
 }
 
@@ -268,13 +274,15 @@ function setup() {
 
 function draw() {
 
-    //Manage z-index of the gui menu if open or closed
-    guiContainer.style.zIndex = guiColorManager.closed ? 1 : 3
- 
+    //Manage z-index of the gui menus if open or closed
+    guiContainer.style.zIndex = (guiColorManager.closed && guiMain.closed) ? 1 : 3;
+    (window.isTourActive && isMobile ) && openGuiFolers();
     if (frameCount % 2 === 0) {
         props['FPS'] = Math.round(frameRate());
     }
     if (isMousePressed) applyRepulsion();
+
+
 
     // Drawing mode 
     isBackground &&  background(props.backgroundColor[0], props.backgroundColor[1], props.backgroundColor[2], props['backgroundAlpha']);
@@ -439,10 +447,10 @@ function applyRepulsion() {
 
 // Save canva screenshot
 
-document.querySelector('.save-button').addEventListener('click', saveCanvasImage);
+document.querySelector(`${isMobile ? '.save-button-mobile' : '.save-button'}`).addEventListener('click', saveCanvasImage);
 
 function keyPressed() {
-    if (key === ' ' && !window.isTourActive) {
+    if (key === ' ') {
         saveCanvasImage();
     }
 }
@@ -453,7 +461,7 @@ function saveCanvasImage() {
 
 // How to use tutorial : open all GUI folders when tutorial start
 
-document.getElementById("how-to-use").addEventListener("click", () => {
+function openGuiFolers(){
     guiMain.open();
     guiColorManager.open();
     colorManagerFolder.open();
@@ -463,14 +471,13 @@ document.getElementById("how-to-use").addEventListener("click", () => {
     colors.forEach(color => {
         colorFolders[color].open();
     });
-
-});
+    checkbox.checked = false;
+}
 
 // Description card position
 
 function handleViewportChange() {
     // RESIZE
-    const checkbox = document.getElementById('cb1');
     if (window.innerWidth > 480) {
       checkbox.checked = true;
     }
