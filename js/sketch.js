@@ -5,7 +5,8 @@ let isBackground = true;
 let isNexus = false;
 let isMousePressed = false;
 let colorFolders = {};
-let canvaSize ={};
+let canvaSize = {};
+let isMobile =  window.innerWidth < 480;
 
 //////////////  dat.GUI interface settings //////////////
 
@@ -13,7 +14,7 @@ const colors = ["Red", "Cyan", "Blue", "Orange"]
 
 const props = {
     'backgroundColor': [0, 0, 0],
-    'Max distance interaction': 100,
+    'Max distance interaction': (isMobile ? 50 : 100),
     'Scale': 1,
     'Reset': resetProps,
     'Random': randomizeProps,
@@ -28,7 +29,7 @@ const props = {
         updateParticles();
     },
     'backgroundAlpha' : 150,
-    'particleSize' : 4,
+    'particleSize' : (isMobile ? 3 : 4),
     'timeScale': 1,
     'FPS': 0,
     'mouseImpactCoef' : 1,
@@ -51,13 +52,13 @@ function updateParticles() {
 
 function resetProps() {
     colors.forEach(color => {
-        props[`${color} Particles`] = 100;
+        props[`${color} Particles`] = (isMobile ? 50 : 100);
         props[`${color} Visible`] = true;
         colors.forEach(otherColor => {
             props[`${color[0]} <--> ${otherColor[0]}`] = 0;
         })
     });
-    props['Max distance interaction'] = 100;
+    props['Max distance interaction'] = (isMobile ? 50 : 100);
     props['Scale'] = 1;
     props['backgroundAlpha'] = 150;
     isNexus = false;
@@ -70,12 +71,12 @@ function resetProps() {
 
 function randomizeProps(){
     colors.forEach(color => {
-        props[`${color} Particles`] = Math.floor(Math.random() * (isNexus ? 150 : 300));
+        props[`${color} Particles`] = Math.floor(Math.random() * (isNexus ? (isMobile ? 80 : 150) : (isMobile ? 150 : 300) ));
         colors.forEach(otherColor => {
             props[`${color[0]} <--> ${otherColor[0]}`] = (Math.random() * 10) - 5;
         })
     });
-    props['Max distance interaction'] = Math.floor(Math.random() * (isNexus ? 130 : 200));
+    props['Max distance interaction'] = Math.floor(Math.random() * (isNexus ?  (isMobile ? 100 : 150) : (isMobile ? 150 : 200)));
     updateParticles();
 }
 
@@ -83,20 +84,28 @@ function randomizeProps(){
 function updateSliderConstraints() {
     colors.forEach(color => {
         const colorParticleController = guiMain.__folders["Particles Rules"].__folders[color].__controllers[0];
-        if (isNexus && props[`${color} Particles`] > 150) {
-            props[`${color} Particles`] = 150;
+        if (isNexus && props[`${color} Particles`] >= 150) {
+            props[`${color} Particles`] = (isMobile ? 80 : 150);            
         } 
         if (colorParticleController) {
-            colorParticleController.max(isNexus ? 150 : 300);
+            colorParticleController.max(isNexus ? (isMobile ? 80 : 150) : (isMobile ? 150 : 300));
             colorParticleController.updateDisplay();
         }
     });
     const maxDistanceController = guiMain.__folders["Global Settings"].__controllers.find(ctrl => ctrl.property === 'Max distance interaction');
     if (maxDistanceController) {
-        if (isNexus && props['Max distance interaction'] > 100) {
-            props['Max distance interaction'] = 100;
+        if (isNexus && props['Max distance interaction'] >= 100) {
+            props['Max distance interaction'] = (isMobile ? 50 : 100);
         } 
-        maxDistanceController.max(isNexus ? 150 : 200);
+        maxDistanceController.max(isNexus ? (isMobile ? 100 : 150) : 200);
+        maxDistanceController.updateDisplay();
+    }
+    const scaleController = guiMain.__folders["Global Settings"].__controllers.find(ctrl => ctrl.property === 'Scale');
+    if (scaleController) {
+        if (isNexus && props['Scale'] >= 1.5) {
+            props['Scale'] = (isMobile ? 1.5 : props['Scale']);
+        } 
+        scaleController.max(isNexus && isMobile ? 1.5 : 2);
         maxDistanceController.updateDisplay();
     }
 }
@@ -115,7 +124,8 @@ function windowResized() {
 ////////////// p5 SETUP //////////////
 
 function setup() {
-    canvaSize = {x : (window.innerWidth  < 480 ? ((window.innerWidth * 0.9)) : 1000), y : (window.innerWidth < 480 ?(window.innerHeight / 1.8) : 720)};
+  
+    canvaSize = {x : (isMobile ? ((window.innerWidth * 0.9)) : 1000), y : (isMobile ?(window.innerHeight / 1.8) : 720)};
     // console.log(canvaSize.x, canvaSize.y);
     
     const canvas = createCanvas(canvaSize.x, canvaSize.y);
@@ -146,7 +156,7 @@ function setup() {
     randomButtonElement.id = 'randomButton-element';
     updateButtonColor('#randomButton-element', true, '#21bbe6');
 
-    globalSettings.add(props, 'Max distance interaction', 0, 200, 1);
+    globalSettings.add(props, 'Max distance interaction', 0, (isMobile ? 150 : 200), 1);
  
     // Zoom effect slider
     globalSettings.add(props, 'Scale', 0.1, 2, 0.1).name("Zoom").onChange(() => {
@@ -167,11 +177,11 @@ function setup() {
     particlesSettingsElement.classList.add('step3');
 
     colors.forEach(color => {
-        props[`${color} Particles`] = 100;
+        props[`${color} Particles`] = (isMobile ? 50 : 100);
         props[`${color} Visible`] = true; 
         colorFolders[color]  = particlesSettings.addFolder(color);
         colorFolders[color].open();
-        colorFolders[color].add(props, `${color} Particles`, 1, 300, 1).name('Particles').onChange(updateParticles);
+        colorFolders[color].add(props, `${color} Particles`, 1, (isMobile ? 150 : 300), 1).name('Particles').onChange(updateParticles);
         
         // Color title
         const folderTitle = colorFolders[color].__ul.querySelector('.dg .title');
@@ -219,7 +229,7 @@ function setup() {
     });
     // Particles shape
     drawingFolder.add(props, 'particleSize', 1, 20, 0.5).name("Particles Radius");
-    drawingFolder.addColor(props, 'backgroundColor').name("Background Color").onChange(() => {
+    drawingFolder.addColor(props, 'backgroundColor').name(`${isMobile ? 'Background' : 'Background Color'}`).onChange(() => {
         background(props.backgroundColor[0], props.backgroundColor[1], props.backgroundColor[2], props['backgroundAlpha']);
     });
     // Nexus mode button
