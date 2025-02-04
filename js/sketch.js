@@ -8,6 +8,7 @@ let colorFolders = {};
 let canvaSize = {};
 let isMobile =  window.innerWidth < 767;
 let checkbox;
+
 //////////////  dat.GUI interface settings //////////////
 
 const colors = ["Red", "Cyan", "Blue", "Orange"]
