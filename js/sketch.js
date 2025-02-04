@@ -6,7 +6,7 @@ let isNexus = false;
 let isMousePressed = false;
 let colorFolders = {};
 let canvaSize = {};
-let isMobile =  window.innerWidth < 480;
+let isMobile =  window.innerWidth < 767;
 let checkbox;
 //////////////  dat.GUI interface settings //////////////
 
@@ -475,7 +475,7 @@ function openGuiFolers(){
 
 function handleViewportChange() {
     // RESIZE
-    if (window.innerWidth > 480) {
+    if (window.innerWidth > 767) {
       checkbox.checked = true;
     }
 }

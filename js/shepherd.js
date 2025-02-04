@@ -2,7 +2,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     window.isTourActive = false;
 
-    let isMobile = window.innerWidth < 480;
+    let isMobile = window.innerWidth < 767;
     let checkbox = document.getElementById('cb1');
     
     const tour = new Shepherd.Tour({

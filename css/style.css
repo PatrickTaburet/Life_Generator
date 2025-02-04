@@ -181,6 +181,15 @@ color: #dafaf4;
   width: 45vw;
   z-index: -1;
 }
+.hexa-image{
+  position: absolute;
+  top: -18vw;
+  right: -50vw;
+  rotate: 180deg;
+  width: 90vw;
+  height: auto;
+  z-index: -2;
+}
 .copyright{
   color: #dafaf4;
   font-family: sans-serif;
@@ -193,6 +202,12 @@ color: #dafaf4;
   transform: translateX(-50%);
 
 }
+
+/* GUI */
+.dg.main .close-bottom{
+  background-color: #137c99!important;
+}
+
 
 /* How to use  */
 
@@ -286,14 +301,18 @@ Media queries
 ========================
 */
 
-/* ----------------------------- Mobile < 480px ------------------------------ */
-@media (max-width: 480px) {
+/* ----------------------------- Mobile & Tablet < 767px ------------------------------ */
+@media (max-width: 767px) {
+
   body{
     background: rgb(22,34,32);
     background: linear-gradient(90deg, rgba(22,34,32,1) 15%, rgba(0,0,0,1) 50%, rgba(22,34,32,1) 85%);  
   }
   main{
     justify-content: start;
+    position: relative;
+    overflow: hidden;
+    height: 100vh;
   }
   h1{
     font-size: 27px;
@@ -487,9 +506,7 @@ Media queries
     background-color: #21bbe6!important;
     color: #162220!important;
   }
-  /* .shepherd-arrow{
-    
-  } */
+
   .warning{
     color: #80fbdf;
   }
@@ -500,6 +517,16 @@ Media queries
     width: 30vh;
     z-index: -1;
   }
+  .hexa-image{
+    position: absolute;
+    top: 0vh;
+    /* transform: translate(50%); */
+    right: -120vw;
+    rotate: 230deg;
+    width: 200vw;
+    height: auto;
+    z-index: -2;
+  }
 }
 /* ----------------------------- Small tablet (portrait) 481px / 767px ------------------------------ */
 
@@ -509,13 +536,66 @@ Media queries
 
 /* ----------------------------- Mobile (landscape) & Tablet < 767px ------------------------------ */
 @media (max-width: 767px) and (orientation: landscape)  {
-  body {
+  /* body {
     transform: rotate(90deg);
     transform-origin: center center;
     width: 100vh;
     height: 100vw;
     overflow-x: hidden;
     position: fixed;
+  } */
+   main{
+    overflow: hidden;
+    height: 120vh;
+   }
+  .description-card{
+    min-width: 60vw;
+    padding: 15px;
+    max-height: 70vh;
+    overflow-y: scroll;
+  }
+  .description-card p{
+    margin-bottom: 1em;
+  }
+  .description{
+    font-size: 13px;
+  }
+    /* Tutorial Modales */
+
+  .shepherd-theme-arrows{
+    max-width: 80vw!important;
+
+  }
+  .shepherd-cancel-icon{
+    color: #dafaf4!important;
+    font-size: 30px!important;
+  }
+  .shepherd-header{
+    padding: 0 .45rem 0!important;
+    height: 15px;
+  }
+  .shepherd-text{
+    padding: .2em .45em 1.2em .35em!important;
+    font-size: 13px!important;
+    line-height : 1rem!important;
+  }
+  .shepherd-footer {
+    padding: 0 .45rem!important;
+  }
+  .shepherd-pagination {
+    margin-right: auto;
+    font-size: 13px!important;
+  }
+  .shepherd-button {
+    background-color: #137c99!important;
+    color: #dafaf4!important;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 0.4rem 0.5rem 0.3rem 0.5rem!important;
+  }
+  .shepherd-button:hover {
+    background-color: #21bbe6!important;
+    color: #162220!important;
   }
 }
 
@@ -540,7 +620,15 @@ Media queries
   .description{
     font-size: 14px;
   }
-
+  .hexa-image{
+    position: absolute;
+    top: -10vw;
+    right: -50vw;
+    rotate: 180deg;
+    width: 90vw;
+    height: auto;
+    z-index: -2;
+  }
 
   /* GUI */
 
