@@ -1,14 +1,12 @@
 // import * as dat from 'dat.gui';
 import { getP5Instance } from './p5Instance.js';
 import { getParticles, setupParticles, clearParticles } from './particlesManager.js';
+import {appStates} from './appStates.js';
 console.log("guisettings");
 
 //////////////  dat.GUI interface settings //////////////
 
-let colorManagerFolder, particlesSettings, globalSettings, drawingFolder;
-export let isBackground = true;
-export let isNexus = false;
-export let isMobile =  window.innerWidth < 767;
+let colorManagerFolder, particlesSettings, globalSettings, drawingFolder, guiMain, guiColorManager ;
 let colorFolders = {};
 let checkbox = document.getElementById('cb1');
 
@@ -17,22 +15,22 @@ export const colors = ["Red", "Cyan", "Blue", "Orange"];
 
 export const props = {
     'backgroundColor': [0, 0, 0],
-    'Max distance interaction': (isMobile ? 50 : 100),
+    'Max distance interaction': (appStates.isMobile ? 50 : 100),
     'Scale': 1,
     'Reset': resetProps,
     'Random': randomizeProps,
     'drawingMode': () => {
-        isBackground = !isBackground;
-        updateButtonColor('#drawing-mode-button', !isBackground);
+        appStates.isBackground = !appStates.isBackground;
+        updateButtonColor('#drawing-mode-button', !appStates.isBackground);
     },
     'nexusMode': () => {            
-        isNexus = !isNexus;
-        updateButtonColor('#nexus-mode-button', isNexus);
+        appStates.isNexus = !appStates.isNexus;
+        updateButtonColor('#nexus-mode-button', appStates.isNexus);
         updateSliderConstraints(); 
         updateParticles();
     },
     'backgroundAlpha' : 150,
-    'particleSize' : (isMobile ? 3 : 4),
+    'particleSize' : (appStates.isMobile ? 3 : 4),
     'timeScale': 1,
     'FPS': 0,
     'mouseImpactCoef' : 1,
@@ -49,7 +47,7 @@ export function setupGUI(){
     const p = getP5Instance();
     // --- Main interface ---
     
-    const guiMain = new dat.GUI();
+    guiMain = new dat.GUI();
     guiMain.domElement.classList.add('gui-main');
     
     // Global settings
@@ -68,7 +66,7 @@ export function setupGUI(){
     randomButtonElement.id = 'randomButton-element';
     updateButtonColor('#randomButton-element', true, '#21bbe6');
 
-    globalSettings.add(props, 'Max distance interaction', 0, (isMobile ? 150 : 200), 1);
+    globalSettings.add(props, 'Max distance interaction', 0, (appStates.isMobile ? 150 : 200), 1);
  
     // Zoom effect slider
     globalSettings.add(props, 'Scale', 0.1, 2, 0.1).name("Zoom").onChange(() => {
@@ -89,11 +87,11 @@ export function setupGUI(){
     particlesSettingsElement.classList.add('step3');
 
     colors.forEach(color => {
-        props[`${color} Particles`] = (isMobile ? 50 : 100);
+        props[`${color} Particles`] = (appStates.isMobile ? 50 : 100);
         props[`${color} Visible`] = true; 
         colorFolders[color]  = particlesSettings.addFolder(color);
         colorFolders[color].open();
-        colorFolders[color].add(props, `${color} Particles`, 1, (isMobile ? 150 : 300), 1).name('Particles').onChange(updateParticles);
+        colorFolders[color].add(props, `${color} Particles`, 1, (appStates.isMobile ? 150 : 300), 1).name('Particles').onChange(updateParticles);
         
         // Color title
         const folderTitle = colorFolders[color].__ul.querySelector('.dg .title');
@@ -117,7 +115,7 @@ export function setupGUI(){
     // --- Drawing interface ---
 
     // Color manager 
-    const guiColorManager = new dat.GUI({ name: "Color Manager" });
+    guiColorManager = new dat.GUI({ name: "Color Manager" });
 
     guiColorManager.domElement.classList.add('gui-color');
     colorManagerFolder = guiColorManager.addFolder("Color Manager");
@@ -139,7 +137,7 @@ export function setupGUI(){
     drawingFolder.add(props, 'backgroundAlpha', 1, 150, 1).name("Trails");
     // Particles shape
     drawingFolder.add(props, 'particleSize', 1, 20, 0.5).name("Particles Radius");
-    drawingFolder.addColor(props, 'backgroundColor').name(`${isMobile ? 'Background' : 'Background Color'}`).onChange(() => {
+    drawingFolder.addColor(props, 'backgroundColor').name(`${appStates.isMobile ? 'Background' : 'Background Color'}`).onChange(() => {
         p.background(props.backgroundColor[0], props.backgroundColor[1], props.backgroundColor[2], props['backgroundAlpha']);
     });
     // Nexus mode button
@@ -166,43 +164,48 @@ export function setupGUI(){
     //     guiMain.close();
     //     guiColorManager.close();
     // }
-    if(isMobile) {
+    if(appStates.isMobile) {
         guiMain.close();
         guiColorManager.close();
     }     
-
-    return { guiMain, guiColorManager };
+    return {guiMain, guiColorManager};
 }
 
+// export function getGuiMain() {
+//     return guiMain;
+// }
 
+// export function getGuiColorManager() {
+//     return guiColorManager;
+// }
 
 function resetProps() {
     colors.forEach(color => {
-        props[`${color} Particles`] = (isMobile ? 50 : 100);
+        props[`${color} Particles`] = (appStates.isMobile ? 50 : 100);
         props[`${color} Visible`] = true;
         colors.forEach(otherColor => {
             props[`${color[0]} <--> ${otherColor[0]}`] = 0;
         })
     });
-    props['Max distance interaction'] = (isMobile ? 50 : 100);
+    props['Max distance interaction'] = (appStates.isMobile ? 50 : 100);
     props['Scale'] = 1;
     props['backgroundAlpha'] = 150;
-    isNexus = false;
-    updateButtonColor('#nexus-mode-button', isNexus);
+    appStates.isNexus = false;
+    updateButtonColor('#nexus-mode-button', appStates.isNexus);
     updateSliderConstraints(); 
-    isBackground = true;
-    updateButtonColor('#drawing-mode-button', !isBackground);
+    appStates.isBackground = true;
+    updateButtonColor('#drawing-mode-button', !appStates.isBackground);
     updateParticles();
 }
 
 function randomizeProps(){
     colors.forEach(color => {
-        props[`${color} Particles`] = Math.floor(Math.random() * (isNexus ? (isMobile ? 80 : 150) : (isMobile ? 150 : 300) ));
+        props[`${color} Particles`] = Math.floor(Math.random() * (appStates.isNexus ? (appStates.isMobile ? 80 : 150) : (appStates.isMobile ? 150 : 300) ));
         colors.forEach(otherColor => {
             props[`${color[0]} <--> ${otherColor[0]}`] = (Math.random() * 10) - 5;
         })
     });
-    props['Max distance interaction'] = Math.floor(Math.random() * (isNexus ?  (isMobile ? 100 : 150) : (isMobile ? 150 : 200)));
+    props['Max distance interaction'] = Math.floor(Math.random() * (appStates.isNexus ?  (appStates.isMobile ? 100 : 150) : (appStates.isMobile ? 150 : 200)));
     updateParticles();
 }
 
@@ -220,34 +223,34 @@ export function updateParticles() {
 function updateSliderConstraints() {
     colors.forEach(color => {
         const colorParticleController = guiMain.__folders["Particles Rules"].__folders[color].__controllers[0];
-        if (isNexus && props[`${color} Particles`] >= 150) {
-            props[`${color} Particles`] = (isMobile ? 80 : 150);            
+        if (appStates.isNexus && props[`${color} Particles`] >= 150) {
+            props[`${color} Particles`] = (appStates.isMobile ? 80 : 150);            
         } 
         if (colorParticleController) {
-            colorParticleController.max(isNexus ? (isMobile ? 80 : 150) : (isMobile ? 150 : 300));
+            colorParticleController.max(appStates.isNexus ? (appStates.isMobile ? 80 : 150) : (appStates.isMobile ? 150 : 300));
             colorParticleController.updateDisplay();
         }
     });
     const maxDistanceController = guiMain.__folders["Global Settings"].__controllers.find(ctrl => ctrl.property === 'Max distance interaction');
     if (maxDistanceController) {
-        if (isNexus && props['Max distance interaction'] >= 100) {
-            props['Max distance interaction'] = (isMobile ? 50 : 100);
+        if (appStates.isNexus && props['Max distance interaction'] >= 100) {
+            props['Max distance interaction'] = (appStates.isMobile ? 50 : 100);
         } 
-        maxDistanceController.max(isNexus ? (isMobile ? 100 : 150) : 200);
+        maxDistanceController.max(appStates.isNexus ? (appStates.isMobile ? 100 : 150) : 200);
         maxDistanceController.updateDisplay();
     }
     const scaleController = guiMain.__folders["Global Settings"].__controllers.find(ctrl => ctrl.property === 'Scale');
     if (scaleController) {
-        if (isNexus && props['Scale'] >= 1.5) {
-            props['Scale'] = (isMobile ? 1.5 : props['Scale']);
+        if (appStates.isNexus && props['Scale'] >= 1.5) {
+            props['Scale'] = (appStates.isMobile ? 1.5 : props['Scale']);
         } 
-        scaleController.max(isNexus && isMobile ? 1.5 : 2);
+        scaleController.max(appStates.isNexus && appStates.isMobile ? 1.5 : 2);
         maxDistanceController.updateDisplay();
     }
 }
 // How to use tutorial : open all GUI folders when tutorial start
 
-!isMobile && document.querySelector('#how-to-use').addEventListener("click", openGuiFolers);
+!appStates.isMobile && document.querySelector('#how-to-use').addEventListener("click", openGuiFolers);
 
 export function openGuiFolers(){    
     guiMain.open();
@@ -259,7 +262,7 @@ export function openGuiFolers(){
     colors.forEach(color => {
         colorFolders[color].open();
     });
-    checkbox.checked =  isMobile ? false : true;
+    checkbox.checked =  appStates.isMobile ? false : true;
 }
 
     // Description card position

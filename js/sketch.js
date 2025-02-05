@@ -1,8 +1,9 @@
 import { setP5Instance } from './p5Instance.js';
-import Shepherd from './shepherd.js';
-import { setupGUI, colors, props, updateParticles, isMobile, isBackground, openGuiFolers, isNexus, handleViewportChange} from './guiSettings.js';
-// import Particle from './Particle.js'; 
-import { getParticles, setupParticles, clearParticles } from './particlesManager.js';
+import {shepherdSettings} from './shepherd.js';
+import { setupGUI, colors, props, updateParticles, openGuiFolers, handleViewportChange} from './guiSettings.js';
+import { getParticles, setupParticles, applyRules } from './particlesManager.js';
+import {appStates} from './appStates.js';
+
 
 ////////////// p5 SETUP //////////////
 
@@ -12,13 +13,12 @@ let sketch = (p) => {
     let particles;
     let guiContainer, guiMain, guiColorManager;
 
-    let isMousePressed = false;
     let canvaSize = {};
 
     // Resize windows 
 
     p.windowResized = () => {
-        canvaSize = {width : (isMobile ? (window.innerWidth * 0.9) : (window.innerWidth * 0.6)), height : (isMobile ?(window.innerHeight / 1.8) : (window.innerHeight * 0.78))};    
+        canvaSize = {width : (appStates.isMobile ? (window.innerWidth * 0.9) : (window.innerWidth * 0.6)), height : (appStates.isMobile ?(window.innerHeight / 1.8) : (window.innerHeight * 0.78))};    
         const canvas = p.createCanvas(canvaSize.width, canvaSize.height);
         canvas.parent("sketchContainer");
         handleViewportChange();
@@ -27,16 +27,20 @@ let sketch = (p) => {
 
     p.setup = () =>{
         
-        canvaSize = {width : (isMobile ? (window.innerWidth * 0.9) : (window.innerWidth * 0.6)), height : (isMobile ? (window.innerHeight / 1.8) : (window.innerHeight * 0.78))};    
+        canvaSize = {width : (appStates.isMobile ? (window.innerWidth * 0.9) : (window.innerWidth * 0.6)), height : (appStates.isMobile ? (window.innerHeight / 1.8) : (window.innerHeight * 0.78))};    
         const canvas = p.createCanvas(canvaSize.width, canvaSize.height);
         // const canvas = createCanvas(1000, 720);
         canvas.parent("sketchContainer");
         handleViewportChange();
         particles = getParticles();
+        
         // Initialize dat.GUI
-        const guiInstances = setupGUI();
-        guiMain = guiInstances.guiMain;
-        guiColorManager = guiInstances.guiColorManager;
+        const guiSettings = setupGUI();
+        guiMain = guiSettings.guiMain;
+        guiColorManager = guiSettings.guiColorManager;
+
+        // Initialize shepheard tutorial
+        shepherdSettings(guiMain, guiColorManager);
 
         // gui global container
         guiContainer = document.querySelector(".dg.ac");
@@ -53,16 +57,16 @@ let sketch = (p) => {
         particles = getParticles();
         //Manage z-index of the gui menus if open or closed
         guiContainer.style.zIndex = (guiColorManager.closed && guiMain.closed) ? 1 : 3;
-        (window.isTourActive && isMobile ) && openGuiFolers();
+        (appStates.isTourActive && appStates.isMobile ) && openGuiFolers();
         if (p.frameCount % 2 === 0) {
             props['FPS'] = Math.round(p.frameRate());
         }
-        if (isMousePressed) applyRepulsion();
+        if (appStates.isMousePressed) applyRepulsion();
 
 
 
         // Drawing mode 
-        isBackground &&  p.background(props.backgroundColor[0], props.backgroundColor[1], props.backgroundColor[2], props['backgroundAlpha']);
+        appStates.isBackground &&  p.background(props.backgroundColor[0], props.backgroundColor[1], props.backgroundColor[2], props['backgroundAlpha']);
 
         // Apply rules for interactions
         colors.forEach(color1 => {
@@ -75,7 +79,7 @@ let sketch = (p) => {
                     props[`${color1[0]} <--> ${color2[0]}`]
                 );
 
-                isNexus && (
+                appStates.isNexus && (
                     particles.filter(particle => particle.color === color1).forEach(a => {
                         particles.filter(particle => particle.color === color2).forEach(b => {
                             const dx = a.x - b.x;
@@ -94,43 +98,19 @@ let sketch = (p) => {
         particles.forEach(particle => particle.drawParticle());
     }
 
-
-
-    function applyRules(particles1, particles2, g) {
-        for (let a of particles1) {
-            let fx = 0;
-            let fy = 0;
-
-            for (let b of particles2) {
-                const dx = a.x - b.x;
-                const dy = a.y - b.y;
-                const d = p.sqrt(dx * dx + dy * dy);
-
-                if (d > 0 && d < props['Max distance interaction']) {
-                    const F = g / d;
-                    fx += F * dx;
-                    fy += F * dy;
-                }
-            }
-            a.update(fx, fy);
-        }
-    }
-
-
-
     // Mouse pressed repulsive impact
 
     p.mousePressed = () => {
-        isMousePressed = true;
+        appStates.isMousePressed = true;
     }
     p.mouseReleased = () => {
-        isMousePressed = false;
+        appStates.isMousePressed = false;
     }
     p.touchStarted = () => {
-        isMousePressed = true;
+        appStates.isMousePressed = true;
     }
     p.touchEnded = () => {
-        isMousePressed = false;
+        appStates.isMousePressed = false;
     }
     function applyRepulsion() {
         let f = props["mouseImpactCoef"];
@@ -150,10 +130,9 @@ let sketch = (p) => {
         });
     }
 
-
     // Save canva screenshot
 
-    document.querySelector(`${isMobile ? '.save-button-mobile' : '.save-button'}`).addEventListener('click', saveCanvasImage);
+    document.querySelector(`${appStates.isMobile ? '.save-button-mobile' : '.save-button'}`).addEventListener('click', saveCanvasImage);
 
     p.keyPressed = () => {
         if (p.key === ' ') {
@@ -162,11 +141,8 @@ let sketch = (p) => {
     }
     function saveCanvasImage() {
         const userConfirmation = confirm("Do you want to save this image?");
-        if (userConfirmation) saveCanvas('myArtwork', 'png');
+        if (userConfirmation) p.saveCanvas('myArtwork', 'png');
     }
-
-
-
 
 }
 new p5(sketch, 'sketchContainer');  

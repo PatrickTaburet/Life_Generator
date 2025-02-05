@@ -1,14 +1,17 @@
-html {
-  box-sizing: border-box;
-}
-html, body {
-  height: 100%;
-}
 *{
   box-sizing: inherit;
   margin: 0;
   padding: 0;
 }
+html {
+  box-sizing: border-box;
+  overflow: hidden;
+
+}
+html, body {
+  height: 100%;
+}
+
 
 body{
   background: rgb(22,34,32);

@@ -34,3 +34,23 @@ export function clearParticles() {
   particles = [];
 }
 
+export function applyRules(particles1, particles2, g) {
+    const p = getP5Instance();
+    for (let a of particles1) {
+        let fx = 0;
+        let fy = 0;
+
+        for (let b of particles2) {
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const d = p.sqrt(dx * dx + dy * dy);
+
+            if (d > 0 && d < props['Max distance interaction']) {
+                const F = g / d;
+                fx += F * dx;
+                fy += F * dy;
+            }
+        }
+        a.update(fx, fy);
+    }
+}
