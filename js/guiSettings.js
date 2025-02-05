@@ -1,12 +1,10 @@
-// import * as dat from 'dat.gui';
 import { getP5Instance } from './p5Instance.js';
-import { getParticles, setupParticles, clearParticles } from './particlesManager.js';
-import {appStates} from './appStates.js';
-console.log("guisettings");
+import { setupParticles, clearParticles, updateParticles } from './particlesManager.js';
+import { appStates } from './appStates.js';
 
 //////////////  dat.GUI interface settings //////////////
 
-let colorManagerFolder, particlesSettings, globalSettings, drawingFolder, guiMain, guiColorManager ;
+let colorManagerFolder, particlesSettings, globalSettings, drawingFolder, guiMain, guiColorManager, guiContainer;
 let colorFolders = {};
 let checkbox = document.getElementById('cb1');
 
@@ -45,6 +43,7 @@ function updateButtonColor(buttonId, boolVariable, mainColor = 'red', secondColo
 
 export function setupGUI(){
     const p = getP5Instance();
+   
     // --- Main interface ---
     
     guiMain = new dat.GUI();
@@ -71,14 +70,12 @@ export function setupGUI(){
     // Zoom effect slider
     globalSettings.add(props, 'Scale', 0.1, 2, 0.1).name("Zoom").onChange(() => {
         clearParticles();
-        setupParticles();
+        setupParticles(p);
     });
     // Time scale
     globalSettings.add(props, 'timeScale', 0.1, 2, 0.1).name("Time Scale");
     globalSettings.add(props, 'mouseImpactCoef', 0.1, 4, 0.1).name("Click Impact");
     globalSettings.add(props, 'FPS').name("FPS").listen();
-
-
 
     // Particles settings
 
@@ -160,24 +157,17 @@ export function setupGUI(){
     particlesSettings.open();
     globalSettings.open();
     drawingFolder.open();
-    // if (window.innerWidth < 480) {
-    //     guiMain.close();
-    //     guiColorManager.close();
-    // }
+
     if(appStates.isMobile) {
         guiMain.close();
         guiColorManager.close();
-    }     
-    return {guiMain, guiColorManager};
+    }
+
+    // gui global container
+    guiContainer = document.querySelector(".dg.ac");
+
+    return {guiMain, guiColorManager, guiContainer};
 }
-
-// export function getGuiMain() {
-//     return guiMain;
-// }
-
-// export function getGuiColorManager() {
-//     return guiColorManager;
-// }
 
 function resetProps() {
     colors.forEach(color => {
@@ -209,16 +199,6 @@ function randomizeProps(){
     updateParticles();
 }
 
-export function updateParticles() {
-    const p = getP5Instance();
-    clearParticles(); 
-    p.background(0);
-    setupParticles();
-    guiMain.updateDisplay();
-    guiColorManager.updateDisplay();
-}
-
-
 // Constrain the particles number and max distance sliders when NexusMode is active to prevent excessive resource usage and ensure smoother performance
 function updateSliderConstraints() {
     colors.forEach(color => {
@@ -248,7 +228,7 @@ function updateSliderConstraints() {
         maxDistanceController.updateDisplay();
     }
 }
-// How to use tutorial : open all GUI folders when tutorial start
+// "How to use" tutorial : open all GUI folders when tutorial start
 
 !appStates.isMobile && document.querySelector('#how-to-use').addEventListener("click", openGuiFolers);
 
@@ -265,11 +245,10 @@ export function openGuiFolers(){
     checkbox.checked =  appStates.isMobile ? false : true;
 }
 
-    // Description card position
+// Description card position
 
-    export function handleViewportChange() {
-        // RESIZE
-        if (window.innerWidth > 767) {
+export function toggleDescriptionCard() {
+    if (!appStates.isMobile) {
         checkbox.checked = true;
-        }
     }
+}

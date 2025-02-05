@@ -2,8 +2,6 @@ import {appStates} from './appStates.js';
 
 export function shepherdSettings(guiMain, guiColorManager) {
     let checkbox = document.getElementById('cb1');
-    // const guiMain = getGuiMain();
-    // const guiColorManager = getGuiColorManager();
 
     const tour = new Shepherd.Tour({
         useModalOverlay: true,

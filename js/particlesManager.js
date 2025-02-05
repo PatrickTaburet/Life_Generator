@@ -5,15 +5,13 @@ import { getP5Instance } from './p5Instance.js';
 let particles = [];
 
 
-export function setupParticles() {
-    const p = getP5Instance();
+export function setupParticles(p) {
     colors.forEach(color => {
         if (props[`${color} Visible`]) {
             createParticles(props[`${color} Particles`], color, p);
         }
     });
 }
-
 
 function createParticles(number, color, p) {
     if (!p) {
@@ -24,6 +22,15 @@ function createParticles(number, color, p) {
     for (let i = 0; i < scaledNumber; i++) {        
         particles.push(new Particle( p.random(p.width), p.random(p.height), color, p));
     }
+}
+
+export function updateParticles() {
+    const p = getP5Instance();
+    clearParticles(); 
+    p.background(0);
+    setupParticles(p);
+    guiMain.updateDisplay();
+    guiColorManager.updateDisplay();
 }
 
 export function getParticles() {
