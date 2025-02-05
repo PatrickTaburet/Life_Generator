@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
     window.isTourActive = false;
 
@@ -182,4 +183,6 @@ document.addEventListener("DOMContentLoaded", () => {
     tour.on('cancel', () => {
         window.isTourActive = false;
     });
+
 });
+export default Shepherd;
