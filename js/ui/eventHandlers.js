@@ -1,5 +1,5 @@
-import { appStates } from './appStates.js';
-import { saveCanvasImage } from './canvasUtils.js';
+import { appStates } from '../core/appStates.js';
+import { saveCanvasImage } from '../utils/utils.js';
 
 export function setupEventHandlers(p) {
 

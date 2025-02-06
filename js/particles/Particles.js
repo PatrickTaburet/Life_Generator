@@ -1,4 +1,4 @@
-import { props } from './guiSettings.js';
+import { props } from '../ui/guiSettings.js';
 
 export class Particle {
     constructor(x, y, color, p) {

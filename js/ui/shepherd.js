@@ -1,4 +1,4 @@
-import {appStates} from './appStates.js';
+import {appStates} from '../core/appStates.js';
 
 export function shepherdSettings(guiMain, guiColorManager) {
     let checkbox = document.getElementById('cb1');

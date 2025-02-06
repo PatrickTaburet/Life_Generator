@@ -1,11 +1,10 @@
 import { setP5Instance } from './p5Instance.js';
-import { shepherdSettings } from './shepherd.js';
-import { setupGUI, colors, props, openGuiFolers, toggleDescriptionCard } from './guiSettings.js';
-import { getParticles, setupParticles, applyRules, updateParticles } from './particlesManager.js';
+import { shepherdSettings } from '../ui/shepherd.js';
+import { setupGUI, colors, props, openGuiFolers } from '../ui/guiSettings.js';
+import { getParticles, setupParticles, applyRules, updateParticles, applyRepulsion } from '../particles/particlesManager.js';
 import { appStates } from './appStates.js';
-import { setupEventHandlers } from './eventHandlers.js';
-import { calculateCanvasSize } from './canvasUtils.js'
-
+import { setupEventHandlers } from '../ui/eventHandlers.js';
+import { calculateCanvasSize, toggleDescriptionCard } from '../utils/utils.js'
 
 ////////////// p5 SETUP //////////////
 
@@ -24,24 +23,9 @@ let sketch = (p) => {
     }
 
     p.setup = () =>{
-        const canvaSize = calculateCanvasSize() 
-        const canvas = p.createCanvas(canvaSize.width, canvaSize.height);
-        canvas.parent("sketchContainer");
-
-        toggleDescriptionCard();
-        particles = getParticles();
-        
-        // Initialize dat.GUI
-        const guiSettings = setupGUI();
-        guiMain = guiSettings.guiMain;
-        guiColorManager = guiSettings.guiColorManager;
-        guiContainer = guiSettings.guiContainer;
-        
-        // Initialize shepheard tutorial
+        setupCanvas(p);
+        setupGUIElements();
         shepherdSettings(guiMain, guiColorManager);
-
-        window.guiMain = guiMain;
-        window.guiColorManager = guiColorManager;
         setupParticles(p);
         setupEventHandlers(p);
     }
@@ -57,7 +41,7 @@ let sketch = (p) => {
         if (p.frameCount % 2 === 0) {
             props['FPS'] = Math.round(p.frameRate());
         }
-        if (appStates.isMousePressed) applyRepulsion();
+        if (appStates.isMousePressed) applyRepulsion(p);
 
         // Drawing mode 
         appStates.isBackground &&  p.background(props.backgroundColor[0], props.backgroundColor[1], props.backgroundColor[2], props['backgroundAlpha']);
@@ -70,7 +54,8 @@ let sketch = (p) => {
                 applyRules(
                     particles.filter(particle => particle.color === color1),
                     particles.filter(particle => particle.color === color2),
-                    props[`${color1[0]} <--> ${color2[0]}`]
+                    props[`${color1[0]} <--> ${color2[0]}`],
+                    p
                 );
 
                 appStates.isNexus && (
@@ -88,25 +73,27 @@ let sketch = (p) => {
                 )
             });
         });
+
         particles.forEach(particle => particle.drawParticle());
     }
 
-    function applyRepulsion() {
-        let f = props["mouseImpactCoef"];
-        const repulsionStrength = 3.5 * f; 
-        const repulsionRadius = 100 * f; 
-
-        particles.forEach(particle => {
-            const dx = particle.x - p.mouseX;
-            const dy = particle.y - p.mouseY;
-            const distance = p.sqrt(dx * dx + dy * dy);
-
-            if (distance < repulsionRadius && distance > 0) {
-                const force = repulsionStrength / (distance * 0.5); 
-                particle.vx += force * dx;
-                particle.vy += force * dy;
-            }
-        });
+    function setupCanvas(p) {
+        const canvaSize = calculateCanvasSize();
+        const canvas = p.createCanvas(canvaSize.width, canvaSize.height);
+        canvas.parent("sketchContainer");
+        toggleDescriptionCard();
+        particles = getParticles();
+    }
+    
+    // Initialize dat.GUI
+    function setupGUIElements() {
+        const guiSettings = setupGUI();
+        guiMain = guiSettings.guiMain;
+        guiColorManager = guiSettings.guiColorManager;
+        guiContainer = guiSettings.guiContainer;
+        window.guiMain = guiMain;
+        window.guiColorManager = guiColorManager;
     }
 }
+
 new p5(sketch, 'sketchContainer');  

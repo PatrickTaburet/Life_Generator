@@ -1,13 +1,11 @@
-import { getP5Instance } from './p5Instance.js';
-import { setupParticles, clearParticles, updateParticles } from './particlesManager.js';
-import { appStates } from './appStates.js';
+import { getP5Instance } from '../core/p5Instance.js';
+import { setupParticles, clearParticles, updateParticles } from '../particles/particlesManager.js';
+import { appStates } from '../core/appStates.js';
 
 //////////////  dat.GUI interface settings //////////////
 
 let colorManagerFolder, particlesSettings, globalSettings, drawingFolder, guiMain, guiColorManager, guiContainer;
 let colorFolders = {};
-let checkbox = document.getElementById('cb1');
-
 
 export const colors = ["Red", "Cyan", "Blue", "Orange"];
 
@@ -34,12 +32,6 @@ export const props = {
     'mouseImpactCoef' : 1,
 };
 
-function updateButtonColor(buttonId, boolVariable, mainColor = 'red', secondColor = '#21bbe6' ) {
-    const Button = document.querySelector(buttonId).parentElement;
-    if (Button) {
-        Button.querySelector('.property-name').style.color = boolVariable ? mainColor : secondColor;
-    }
-}
 
 export function setupGUI(){
     const p = getP5Instance();
@@ -55,15 +47,8 @@ export function setupGUI(){
     let globalSettingsElement = globalSettings.domElement;
     globalSettingsElement.classList.add('step4');
 
-    let resetButton = globalSettings.add(props, 'Reset');
-    let resetButtonElement = resetButton.domElement;
-    resetButtonElement.id = 'resetButton-element';
-    updateButtonColor('#resetButton-element', true, '#21bbe6');
-
-    let randomButton = globalSettings.add(props, 'Random');
-    let randomButtonElement = randomButton.domElement;
-    randomButtonElement.id = 'randomButton-element';
-    updateButtonColor('#randomButton-element', true, '#21bbe6');
+    addStyledButton(globalSettings, 'Reset', 'randomButton-element')
+    addStyledButton(globalSettings, 'Random', 'resetButton-element')
 
     globalSettings.add(props, 'Max distance interaction', 0, (appStates.isMobile ? 150 : 200), 1);
  
@@ -109,7 +94,7 @@ export function setupGUI(){
         })
     });
 
-    // --- Drawing interface ---
+    // --- Drawing interface / Color manager---
 
     // Color manager 
     guiColorManager = new dat.GUI({ name: "Color Manager" });
@@ -125,18 +110,19 @@ export function setupGUI(){
     });
     
     // Drawing settings
-
     drawingFolder = guiColorManager.addFolder("Drawing");
     let drawingFolderElement = drawingFolder.domElement;
     drawingFolderElement.id = 'drawing-folder';
 
     // Trails effect slider
     drawingFolder.add(props, 'backgroundAlpha', 1, 150, 1).name("Trails");
+
     // Particles shape
     drawingFolder.add(props, 'particleSize', 1, 20, 0.5).name("Particles Radius");
     drawingFolder.addColor(props, 'backgroundColor').name(`${appStates.isMobile ? 'Background' : 'Background Color'}`).onChange(() => {
         p.background(props.backgroundColor[0], props.backgroundColor[1], props.backgroundColor[2], props['backgroundAlpha']);
     });
+
     // Nexus mode button
     let nexusButton = guiColorManager.add(props, `nexusMode`).name(`Nexus Mode`).onChange(updateParticles);
     let nexusButtonElement = nexusButton.domElement;
@@ -146,13 +132,9 @@ export function setupGUI(){
     updateButtonColor('#nexus-mode-button', true, '#21bbe6');
 
     // Drawing mode button
-    let drawingButton = guiColorManager.add(props, 'drawingMode').name("Drawing Mode");
-    let drawingButtonElement = drawingButton.domElement;
-    drawingButtonElement.id = 'drawing-mode-button';
-    updateButtonColor('#drawing-mode-button', true, '#21bbe6');
+    addStyledButton(guiColorManager, 'drawingMode', 'drawing-mode-button','Drawing Mode')
 
     // Open folders by default
-
     colorManagerFolder.open();
     particlesSettings.open();
     globalSettings.open();
@@ -163,11 +145,31 @@ export function setupGUI(){
         guiColorManager.close();
     }
 
-    // gui global container
+    // GUI global container
     guiContainer = document.querySelector(".dg.ac");
 
     return {guiMain, guiColorManager, guiContainer};
 }
+
+// Manage buttons style
+
+function addStyledButton(folder, propName, id, buttonText = null, defaultColor = '#21bbe6'){
+    let button = buttonText 
+        ? folder.add(props, propName).name(buttonText)
+        : folder.add(props, propName);
+    button.domElement.id = id;
+    updateButtonColor(`#${id}`, true, defaultColor);
+    return button;
+}
+
+function updateButtonColor(buttonId, boolVariable, mainColor = 'red', secondColor = '#21bbe6' ) {
+    const Button = document.querySelector(buttonId).parentElement;
+    if (Button) {
+        Button.querySelector('.property-name').style.color = boolVariable ? mainColor : secondColor;
+    }
+}
+
+// Manage props values
 
 function resetProps() {
     colors.forEach(color => {
@@ -199,7 +201,8 @@ function randomizeProps(){
     updateParticles();
 }
 
-// Constrain the particles number and max distance sliders when NexusMode is active to prevent excessive resource usage and ensure smoother performance
+// NexusMode : constrain the particles number and max distance sliders to prevent excessive resource usage and ensure smoother performance
+
 function updateSliderConstraints() {
     colors.forEach(color => {
         const colorParticleController = guiMain.__folders["Particles Rules"].__folders[color].__controllers[0];
@@ -228,6 +231,7 @@ function updateSliderConstraints() {
         maxDistanceController.updateDisplay();
     }
 }
+
 // "How to use" tutorial : open all GUI folders when tutorial start
 
 !appStates.isMobile && document.querySelector('#how-to-use').addEventListener("click", openGuiFolers);
@@ -242,13 +246,7 @@ export function openGuiFolers(){
     colors.forEach(color => {
         colorFolders[color].open();
     });
+
+    const checkbox = document.getElementById('cb1');
     checkbox.checked =  appStates.isMobile ? false : true;
-}
-
-// Description card position
-
-export function toggleDescriptionCard() {
-    if (!appStates.isMobile) {
-        checkbox.checked = true;
-    }
 }

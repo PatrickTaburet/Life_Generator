@@ -1,9 +1,8 @@
 import {Particle} from './Particles.js'; 
-import { colors, props } from './guiSettings.js';
-import { getP5Instance } from './p5Instance.js';
+import { colors, props } from '../ui/guiSettings.js';
+import { getP5Instance } from '../core/p5Instance.js';
 
 let particles = [];
-
 
 export function setupParticles(p) {
     colors.forEach(color => {
@@ -41,8 +40,7 @@ export function clearParticles() {
   particles = [];
 }
 
-export function applyRules(particles1, particles2, g) {
-    const p = getP5Instance();
+export function applyRules(particles1, particles2, g, p) {
     for (let a of particles1) {
         let fx = 0;
         let fy = 0;
@@ -60,4 +58,24 @@ export function applyRules(particles1, particles2, g) {
         }
         a.update(fx, fy);
     }
+}
+
+// Mouse click repulsion
+
+export function applyRepulsion(p) {
+    let f = props["mouseImpactCoef"];
+    const repulsionStrength = 3.5 * f; 
+    const repulsionRadius = 100 * f; 
+
+    particles.forEach(particle => {
+        const dx = particle.x - p.mouseX;
+        const dy = particle.y - p.mouseY;
+        const distance = p.sqrt(dx * dx + dy * dy);
+
+        if (distance < repulsionRadius && distance > 0) {
+            const force = repulsionStrength / (distance * 0.5); 
+            particle.vx += force * dx;
+            particle.vy += force * dy;
+        }
+    });
 }
