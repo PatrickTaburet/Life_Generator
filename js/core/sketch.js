@@ -28,6 +28,7 @@ let sketch = (p) => {
         shepherdSettings(guiMain, guiColorManager);
         setupParticles(p);
         setupEventHandlers(p);
+        removeLoadingScreen();
     }
 
     ////////////// p5 DRAW //////////////
@@ -93,6 +94,12 @@ let sketch = (p) => {
         guiContainer = guiSettings.guiContainer;
         window.guiMain = guiMain;
         window.guiColorManager = guiColorManager;
+    }
+    
+    function removeLoadingScreen(){
+        document.getElementById("loading-screen").style.display = "none";
+        const mainElement = document.querySelector("main");
+        mainElement.style.visibility = "visible"; 
     }
 }
 

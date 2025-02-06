@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Life Simulator</title>
 
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
@@ -15,14 +15,31 @@
     <!-- Shepherd -->
     <script src="https://cdn.jsdelivr.net/npm/shepherd.js@latest/dist/js/shepherd.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@latest/dist/css/shepherd.css">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Life Simulator: a dynamic simulation mimicking particle interactions and molecular behavior. Explore various drawing modes, save your creations, and uncover mesmerizing patterns and complex dynamics.">
+    <meta name="keywords" content="simulation, life simulator, particle interaction, physics, chemistry, biology, interactive, generative art, generative">
+    <meta name="author" content="Patrick Taburet">
     
+    <!-- Social Networks -->
+    <meta property="og:title" content="Life Simulator">
+    <meta property="og:description" content="Explore dynamic particle interactions with Life Simulator. Create and save your own molecular designs.">
+    <meta property="og:image" content="assets/og-image.png"> <!-- Assure-toi de créer une image d'aperçu attractive -->
+    <meta property="og:url" content="https://lifesimulator.com">
+    <meta property="og:type" content="website">
+
+    <link rel="icon" href="assets/icon/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="icon" href="assets/icon/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="assets/icon/favicon-64x64.png" sizes="64x64" type="image/png">
 </head>
 <body>
+    <div id="loading-screen">
+        <div class="spinner"></div>
+    </div>
     <main>
         <h1>LIFE SIMULATOR</h1>
         <img src="./assets/dna.png" alt="organic-blob" class="dna-image">
         <img src="./assets/hexa.png" alt="hexagon-background" class="hexa-image">
-
 
         <section class="accordion description-card">
             <div class="tab">
@@ -55,16 +72,16 @@
                 💡How to use
             </p>
             <div class="bottom-tab">                  
-                <button class="save-button step2">    
+                <button class="save-button step2" aria-label="Save your creation">    
                     <img src="./assets/telecharger.svg" alt="download-icon" class="download-icon"/>
                     <span>SAVE</span>
                 </button>
             </div>
         </section>
-        
+
         <div id="sketchContainer"></div>
 
-        <button class="save-button-mobile step2-mobile ">    
+        <button class="save-button-mobile step2-mobile" aria-label="Save your creation">    
             <img src="./assets/telecharger.svg" alt="download-icon" class="download-icon"/>
             <span>SAVE</span>
         </button>
