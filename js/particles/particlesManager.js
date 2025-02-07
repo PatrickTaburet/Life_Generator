@@ -13,10 +13,6 @@ export function setupParticles(p) {
 }
 
 function createParticles(number, color, p) {
-    if (!p) {
-        console.error('p5 instance is not set!');
-        return;
-    }
     const scaledNumber = Math.floor(number * props['Scale']); 
     for (let i = 0; i < scaledNumber; i++) {        
         particles.push(new Particle( p.random(p.width), p.random(p.height), color, p));

@@ -3,7 +3,7 @@ import { shepherdSettings } from '../ui/shepherd.js';
 import { setupGUI, colors, props, openGuiFolers } from '../ui/guiSettings.js';
 import { getParticles, setupParticles, applyRules, updateParticles, applyRepulsion } from '../particles/particlesManager.js';
 import { appStates } from './appStates.js';
-import { setupEventHandlers } from '../ui/eventHandlers.js';
+import { setupSaveHandlers } from '../ui/setupSaveHandlers.js';
 import { calculateCanvasSize, toggleDescriptionCard } from '../utils/utils.js'
 
 ////////////// p5 SETUP //////////////
@@ -12,7 +12,8 @@ let sketch = (p) => {
     setP5Instance(p);
     let particles;
     let guiContainer, guiMain, guiColorManager;
-
+    let canvasLoaded = false;
+    
     // Resize windows 
     p.windowResized = () => {
         const canvaSize = calculateCanvasSize() 
@@ -27,13 +28,17 @@ let sketch = (p) => {
         setupGUIElements();
         shepherdSettings(guiMain, guiColorManager);
         setupParticles(p);
-        setupEventHandlers(p);
-        removeLoadingScreen();
+        setupSaveHandlers(p);
+        // removeLoadingScreen();
+        canvasLoaded = true;
     }
 
     ////////////// p5 DRAW //////////////
 
     p.draw = () => {
+        if (canvasLoaded) {
+            hideLoadingScreen();
+        }
         particles = getParticles();
 
         //Manage z-index of the gui menus if open or closed
@@ -42,7 +47,7 @@ let sketch = (p) => {
         if (p.frameCount % 2 === 0) {
             props['FPS'] = Math.round(p.frameRate());
         }
-        if (appStates.isMousePressed) applyRepulsion(p);
+        if (p.mouseIsPressed) applyRepulsion(p);
 
         // Drawing mode 
         appStates.isBackground &&  p.background(props.backgroundColor[0], props.backgroundColor[1], props.backgroundColor[2], props['backgroundAlpha']);
@@ -96,10 +101,11 @@ let sketch = (p) => {
         window.guiColorManager = guiColorManager;
     }
     
-    function removeLoadingScreen(){
-        document.getElementById("loading-screen").style.display = "none";
-        const mainElement = document.querySelector("main");
-        mainElement.style.visibility = "visible"; 
+    function hideLoadingScreen() {
+        let loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+          loadingScreen.style.display = 'none';
+        }
     }
 }
 

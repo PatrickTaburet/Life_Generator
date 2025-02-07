@@ -21,10 +21,10 @@ main{
   align-items: center;
   flex-direction: column;
   height: 100%;
-  visibility: hidden;
-
 }
 h1{
+  position: absolute;
+  top: 4vh;
   font-size: 50px;
   display: flex;
   justify-content: center;
@@ -32,7 +32,8 @@ h1{
   font-family: "Audiowide", serif;
   color: #dafaf4;
 }
-.sketchContainer{
+#sketchContainer{
+  margin-top: 10vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -136,6 +137,8 @@ color: #dafaf4;
   border-radius: 25px;
   box-shadow: 0 10px 30px 5px rgba(0, 0, 0, 0.3);
   min-width: 320px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 .description-card p{
   margin-bottom: 1em;
@@ -186,12 +189,13 @@ color: #dafaf4;
 }
 .hexa-image{
   position: absolute;
-  top: -18vw;
-  right: -50vw;
-  rotate: 180deg;
+  top: -35vw;
+  right: -35vw;
+  rotate: -180deg;
   width: 90vw;
   height: auto;
   z-index: -2;
+  scale: 0.5;
 }
 .copyright{
   color: #dafaf4;
@@ -203,7 +207,28 @@ color: #dafaf4;
   text-decoration: none;
   left: 50vw;
   transform: translateX(-50%);
+}
 
+/* Custom scrollbar */
+.description-card::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* Track */
+.description-card::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* Thumb  */
+.description-card::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 10px;
+}
+
+/* Thumb hover */
+.description-card::-webkit-scrollbar-thumb:hover {
+  background: #137c99;
 }
 
 /* GUI */
@@ -336,20 +361,27 @@ Media queries
     background: rgb(22,34,32);
     background: linear-gradient(90deg, rgba(22,34,32,1) 15%, rgba(0,0,0,1) 50%, rgba(22,34,32,1) 85%);  
   }
+  html{
+    overflow: auto;
+  }
   main{
     justify-content: start;
     position: relative;
-    overflow: hidden;
-    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* height: 100vh; */
   }
   h1{
     font-size: 27px;
-    margin-top: 7vh;
+    margin-top: 2vh;
     text-align: center;
+  }
+  #sketchContainer{
+    margin-top: 0;
   }
   .p5Canvas {
     position: absolute; 
-    bottom: 35px;  
+    bottom: 5vh;  
     left: 50%; 
     transform: translateX(-50%); 
     /* margin-bottom: 35px;  */
@@ -522,13 +554,10 @@ Media queries
     z-index: -1;
   }
   .hexa-image{
-    position: absolute;
-    top: 0vh;
-    right: -120vw;
-    rotate: 230deg;
-    width: 200vw;
-    height: auto;
-    z-index: -2;
+    top: -20vw;
+    right: -40vw;
+    rotate: -130deg;
+    scale: 0.9;
   }
 }
 
@@ -612,15 +641,11 @@ Media queries
     font-size: 14px;
   }
   .hexa-image{
-    position: absolute;
-    top: -10vw;
-    right: -50vw;
-    rotate: 180deg;
-    width: 90vw;
-    height: auto;
-    z-index: -2;
+    top: -30vw;
+    right: -30vw;
+    rotate: -180deg;
+    scale: 0.7;
   }
-
   /* GUI */
 
   .dg.main {
