@@ -68,8 +68,6 @@ Make sure you have a modern browser that supports ES6 modules.
   
 ## 📂 Project Structure
   ```bash
-   Copier
-   Modifier
    /assets       - Icons and background images  
    /css          - Global stylesheet (minified version for optimization)  
    /js           - JavaScript (ES6 modules)  
