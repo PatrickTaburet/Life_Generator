@@ -110,7 +110,7 @@ Email: taburet.patrick@gmail.com
 ## 📷 Screenshots  
 
 ### Main Interface  
-The main interface of the application, showcasing the particle simulation in Drawing Mode with persistent trails.  
+The main interface of the application, showcasing the particle simulation and user interface.
 ![Main Interface](./assets/screenshots/screenshot-1.png)  
 
 ### Nexus Mode  
