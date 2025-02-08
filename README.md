@@ -1,5 +1,7 @@
 # Life Simulator 🌌  
 
+![Life Simulator](./assets/screenshots/screenshot-5.png)  
+
 [Live Demo](https://www.life-simulator.com) | [Portfolio](https://patricktaburet.com)  
 
 ## 📖 Description  
