@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2025 Patrick Taburet
+ * This file is licensed under the MIT License.
+ * See the LICENSE file in the root directory for more details.
+ */
+
 import { setP5Instance } from './p5Instance.js';
 import { shepherdSettings } from '../ui/shepherd.js';
 import { setupGUI, colors, props, openGuiFolers } from '../ui/guiSettings.js';

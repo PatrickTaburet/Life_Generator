@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2025 Patrick Taburet
+ * This file is licensed under the MIT License.
+ * See the LICENSE file in the root directory for more details.
+ */
+
 import { getP5Instance } from '../core/p5Instance.js';
 import { setupParticles, clearParticles, updateParticles } from '../particles/particlesManager.js';
 import { appStates } from '../core/appStates.js';

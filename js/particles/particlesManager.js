@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2025 Patrick Taburet
+ * This file is licensed under the MIT License.
+ * See the LICENSE file in the root directory for more details.
+ */
+
 import {Particle} from './Particles.js'; 
 import { colors, props } from '../ui/guiSettings.js';
 import { getP5Instance } from '../core/p5Instance.js';
