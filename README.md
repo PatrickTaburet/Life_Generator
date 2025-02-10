@@ -1,4 +1,4 @@
-# Life Simulator 🌌  
+# Life Simulator
 
 ![Life Simulator](./assets/screenshots/screenshot-5.png)  
 
@@ -44,7 +44,7 @@ Check out the live version here: [Life Simulator](https://www.life-simulator.com
 ## 💻 Installation  
 1. Clone the repository:  
    ```bash
-   git clone https://github.com/username/life-simulator.git
+   git clone https://github.com/PatrickTaburet/Life_Generator.git
    cd life-simulator
    ```
 2. Install dependencies (if any):
