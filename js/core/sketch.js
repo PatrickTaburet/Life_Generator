@@ -3,6 +3,7 @@
  * This file is licensed under the MIT License.
  * See the LICENSE file in the root directory for more details.
  */
+// import p5 from "p5";
 
 import { setP5Instance } from './p5Instance.js';
 import { shepherdSettings } from '../ui/shepherd.js';
