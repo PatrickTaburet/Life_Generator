@@ -1,5 +1,12 @@
 {
+  "name": "life-simulator",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "ts-node-dev js/core/sketch.ts"
+  },
   "dependencies": {
+    "p5": "^1.11.3",
     "shepherd.js": "^14.4.0"
   },
   "devDependencies": {

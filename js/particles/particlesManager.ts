@@ -6,7 +6,7 @@
 
 import p5 from "p5";
 import {Particle} from './Particles.js'; 
-import { colors, props } from '../ui/guiSettings.js';
+import { colors, props, guiMain, guiColorManager } from '../ui/guiSettings.js';
 import { getP5Instance } from '../core/p5Instance.js';
 
 let particles: Particle[] = [];
@@ -43,7 +43,7 @@ export function clearParticles() {
   particles = [];
 }
 
-export function applyRules(particles1, particles2, g, p) {
+export function applyRules(particles1: Particle[], particles2: Particle[], g: number, p: p5) {
     for (let a of particles1) {
         let fx = 0;
         let fy = 0;
@@ -65,7 +65,7 @@ export function applyRules(particles1, particles2, g, p) {
 
 // Mouse click repulsion
 
-export function applyRepulsion(p) {
+export function applyRepulsion(p: p5) {
     let f = props["mouseImpactCoef"];
     const repulsionStrength = 3.5 * f; 
     const repulsionRadius = 100 * f; 

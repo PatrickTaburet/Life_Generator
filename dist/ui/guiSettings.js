@@ -4,7 +4,7 @@
  * See the LICENSE file in the root directory for more details.
  */
 var _a;
-import * as dat from "dat.gui";
+
 import { getP5Instance } from '../core/p5Instance.js';
 import { setupParticles, clearParticles, updateParticles } from '../particles/particlesManager.js';
 import { appStates } from '../core/appStates.js';

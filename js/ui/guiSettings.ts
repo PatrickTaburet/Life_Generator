@@ -4,15 +4,16 @@
  * See the LICENSE file in the root directory for more details.
  */
 
-import * as dat from "dat.gui";
 import { getP5Instance } from '../core/p5Instance.js';
 import { setupParticles, clearParticles, updateParticles } from '../particles/particlesManager.js';
 import { appStates } from '../core/appStates.js';
 
 //////////////  dat.GUI interface settings //////////////
 
-let colorManagerFolder: dat.GUI, particlesSettings: dat.GUI, globalSettings: dat.GUI, drawingFolder: dat.GUI, guiMain: dat.GUI, guiColorManager: dat.GUI, guiContainer: HTMLElement;
+let colorManagerFolder: dat.GUI, particlesSettings: dat.GUI, globalSettings: dat.GUI, drawingFolder: dat.GUI, guiContainer: HTMLElement;
 let colorFolders: { [key: string]: dat.GUI } = {};
+export let guiMain: dat.GUI;
+export let guiColorManager: dat.GUI;
 
 export const colors = ["Red", "Cyan", "Blue", "Orange"];
 
