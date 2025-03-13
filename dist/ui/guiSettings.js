@@ -4,13 +4,14 @@
  * See the LICENSE file in the root directory for more details.
  */
 var _a;
-
 import { getP5Instance } from '../core/p5Instance.js';
 import { setupParticles, clearParticles, updateParticles } from '../particles/particlesManager.js';
 import { appStates } from '../core/appStates.js';
 //////////////  dat.GUI interface settings //////////////
-let colorManagerFolder, particlesSettings, globalSettings, drawingFolder, guiMain, guiColorManager, guiContainer;
+let colorManagerFolder, particlesSettings, globalSettings, drawingFolder, guiContainer;
 let colorFolders = {};
+export let guiMain;
+export let guiColorManager;
 export const colors = ["Red", "Cyan", "Blue", "Orange"];
 export const props = {
     'backgroundColor': [0, 0, 0],

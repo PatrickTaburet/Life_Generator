@@ -5,6 +5,7 @@
  */
 import { appStates } from '../core/appStates.js';
 export function shepherdSettings(guiMain, guiColorManager) {
+    var _a;
     let checkbox = document.getElementById('cb1');
     const tour = new Shepherd.Tour({
         useModalOverlay: true,
@@ -166,7 +167,7 @@ export function shepherdSettings(guiMain, guiColorManager) {
             },
         ]
     });
-    document.getElementById("how-to-use").addEventListener("click", () => {
+    (_a = document.getElementById("how-to-use")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
         tour.start();
     });
     tour.on('complete', () => {

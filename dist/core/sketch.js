@@ -3,7 +3,7 @@
  * This file is licensed under the MIT License.
  * See the LICENSE file in the root directory for more details.
  */
-// import p5 from "p5";
+import p5 from "p5";
 import { setP5Instance } from './p5Instance.js';
 import { shepherdSettings } from '../ui/shepherd.js';
 import { setupGUI, colors, props, openGuiFolers } from '../ui/guiSettings.js';
@@ -41,7 +41,7 @@ let sketch = (p) => {
         }
         particles = getParticles();
         //Manage z-index of the gui menus if open or closed
-        guiContainer.style.zIndex = (guiColorManager.closed && guiMain.closed) ? 1 : 3;
+        guiContainer.style.zIndex = (guiColorManager.closed && guiMain.closed) ? "1" : "3";
         (appStates.isTourActive && appStates.isMobile) && openGuiFolers();
         if (p.frameCount % 2 === 0) {
             props['FPS'] = Math.round(p.frameRate());
@@ -86,8 +86,8 @@ let sketch = (p) => {
         guiMain = guiSettings.guiMain;
         guiColorManager = guiSettings.guiColorManager;
         guiContainer = guiSettings.guiContainer;
-        window.guiMain = guiMain;
-        window.guiColorManager = guiColorManager;
+        // window.guiMain = guiMain;
+        // window.guiColorManager = guiColorManager;
     }
     function hideLoadingScreen() {
         let loadingScreen = document.getElementById('loading-screen');
@@ -96,4 +96,4 @@ let sketch = (p) => {
         }
     }
 };
-new p5(sketch, 'sketchContainer');
+new p5(sketch, document.getElementById('sketchContainer'));

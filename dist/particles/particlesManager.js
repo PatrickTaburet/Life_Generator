@@ -4,7 +4,7 @@
  * See the LICENSE file in the root directory for more details.
  */
 import { Particle } from './Particles.js';
-import { colors, props } from '../ui/guiSettings.js';
+import { colors, props, guiMain, guiColorManager } from '../ui/guiSettings.js';
 import { getP5Instance } from '../core/p5Instance.js';
 let particles = [];
 export function setupParticles(p) {
